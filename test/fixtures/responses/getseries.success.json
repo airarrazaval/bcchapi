@@ -1,0 +1,87 @@
+{
+  "Codigo": 0,
+  "Descripcion": "Success",
+  "Series": {
+    "seriesId": "TEST",
+    "descripEsp": "Test",
+    "descripIng": "Test",
+    "Obs": [
+      {
+        "indexDateString": "01-12-2020",
+        "value": "12.01",
+        "statusCode": "OK"
+      },
+      {
+        "indexDateString": "02-12-2020",
+        "value": "12.02",
+        "statusCode": "OK"
+      },
+      {
+        "indexDateString": "03-12-2020",
+        "value": "12.03",
+        "statusCode": "OK"
+      },
+      {
+        "indexDateString": "04-12-2020",
+        "value": "12.04",
+        "statusCode": "OK"
+      },
+      {
+        "indexDateString": "05-12-2020",
+        "value": "NaN",
+        "statusCode": "ND"
+      },
+      {
+        "indexDateString": "06-12-2020",
+        "value": "NaN",
+        "statusCode": "ND"
+      },
+      {
+        "indexDateString": "07-12-2020",
+        "value": "12.07",
+        "statusCode": "OK"
+      },
+      {
+        "indexDateString": "08-12-2020",
+        "value": "NaN",
+        "statusCode": "ND"
+      },
+      {
+        "indexDateString": "09-12-2020",
+        "value": "12.09",
+        "statusCode": "OK"
+      },
+      {
+        "indexDateString": "10-12-2020",
+        "value": "12.10",
+        "statusCode": "OK"
+      },
+      {
+        "indexDateString": "11-12-2020",
+        "value": "12.11",
+        "statusCode": "OK"
+      },
+      {
+        "indexDateString": "12-12-2020",
+        "value": "NaN",
+        "statusCode": "ND"
+      },
+      {
+        "indexDateString": "13-12-2020",
+        "value": "NaN",
+        "statusCode": "ND"
+      },
+      {
+        "indexDateString": "14-12-2020",
+        "value": "12.14",
+        "statusCode": "OK"
+      },
+      {
+        "indexDateString": "15-12-2020",
+        "value": "12.15",
+        "statusCode": "OK"
+      }
+    ]
+  },
+  "SeriesInfo": []
+}

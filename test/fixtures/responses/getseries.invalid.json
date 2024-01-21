@@ -1,0 +1,11 @@
+{
+  "Codigo": -50,
+  "Descripcion": "An internal error has occurred, information is not available.",
+  "Series": {
+    "descripEsp": null,
+    "descripIng": null,
+    "seriesId": null,
+    "Obs": null
+  },
+  "SeriesInfos": []
+}
