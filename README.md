@@ -78,7 +78,7 @@ _Output_
 
 ### SearchSeries
 
-Allows you to search for series by their frequency code (ie: daily, weekly, monthly, yearly).
+Allows you to search for series by their frequency code (ie: daily, monthly, quarterly, yearly).
 
 #### Parameters
 
