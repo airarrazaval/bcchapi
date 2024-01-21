@@ -42,11 +42,12 @@ Allows you to retrieve historic data series.
 
 #### Parameters
 
-|name|type|required|description|example
-|---|---|---|---|---|
-|series|`string`|Yes|The series identifier|`'F072.EUR.USD.N.O.D'`
-|since|`string` or `Date`| No | The starting date of the series| `'2020-12-01'`
-|until|`string` or `Date`| No | The ending date of the series| `'2020-12-02'`
+| name   | type               | required | description                     | example                |
+|--------|--------------------|----------|---------------------------------|------------------------|
+| series | `string`           | Yes      | The series identifier           | `'F072.EUR.USD.N.O.D'` |
+| since  | `string` or `Date` | No       | The starting date of the series | `'2020-12-01'`         |
+| until  | `string` or `Date` | No       | The ending date of the series   | `'2020-12-02'`         |
+
 
 > **NOTE**: The API does not implements pagination, so if you need to retrieve a large amount of data, you should use the `since` and `until` parameters to split the request into smaller chunks.
 
@@ -80,9 +81,10 @@ Allows you to search for series by their frequency code (ie: daily, weekly, mont
 
 #### Parameters
 
-|name|type|required|description|example
-|---|---|---|---|---|
-|frequency|`string`|Yes|The frequency code to search (`DAILY`, `MONTHLY`, `QUARTERLY`, `ANNUAL`)|`'DAILY'`
+| name      | type     | required | description                                                              | example   |
+|-----------|----------|----------|--------------------------------------------------------------------------|-----------|
+| frequency | `string` | Yes      | The frequency code to search (`DAILY`, `MONTHLY`, `QUARTERLY`, `ANNUAL`) | `'DAILY'` |
+
 
 #### Example
 
