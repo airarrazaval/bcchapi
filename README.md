@@ -6,7 +6,7 @@ The Central Bank of Chile provides a web service that allows searching and extra
 
 The API currently supports only to functions: `GetSeries` (default) used for retrieveng historical data on a specific series, and `SearchSeries` used for searching series by frequency code (ie: daily, monthly, quearterly or yearly).
 
-For further information on how to use the API directly, please refer to the [official documentation](https://si3.bcentral.cl/estadisticas/Principal1/Web_Services/doc_en.htm).
+For further information on how to use the API directly, please refer to the [official documentation](https://si3.bcentral.cl/estadisticas/Principal1/Web_Services/doc_en.htm). Usage of the API is subject to the restrictions defined in the [Terms and Conditions](https://si3.bcentral.cl/estadisticas/Principal1/Web_Services/index_BDE_TC.htm) of the Statistical Data Base API of the Central Bank of Chile. As of January of 2024, **the API allows up to 5 requests per second per user**.
 
 ## Installation
 
@@ -38,6 +38,8 @@ const client = new Client({
 ### GetSeries
 
 Allows you to retrieve historic data series.
+
+- Series Catalogue: [EN](https://si3.bcentral.cl/estadisticas/Principal1/Web_Services/Webservices/series_EN.xlsx) | [ES](https://si3.bcentral.cl/estadisticas/Principal1/Web_Services/Webservices/series.xlsx)
 
 #### Parameters
 
