@@ -1,0 +1,44 @@
+{
+  "name": "bcchapi",
+  "version": "1.0.0",
+  "description": "API para acceder al Web Service del Banco Central de Chile.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "rimraf dist && tsc",
+    "test": "vitest",
+    "coverage": "vitest --coverage"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/airarrazaval/bcchapi.git"
+  },
+  "keywords": [
+    "node",
+    "javascript",
+    "typescript",
+    "bcchapi"
+  ],
+  "author": "Alfredo Irarrazaval",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/airarrazaval/bcchapi/issues"
+  },
+  "homepage": "https://github.com/airarrazaval/bcchapi#readme",
+  "devDependencies": {
+    "@tsconfig/node20": "^20.1.2",
+    "@types/node": "^20.11.5",
+    "@vitest/coverage-v8": "^1.2.1",
+    "rimraf": "^5.0.5",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3",
+    "vitest": "^1.2.1"
+  },
+  "engines": {
+    "node": ">=18.19.0",
+    "npm": ">=10.2.3"
+  },
+  "volta": {
+    "node": "20.11.0"
+  }
+}
