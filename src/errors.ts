@@ -1,4 +1,4 @@
-import { ErrorResponse } from './response';
+import { ErrorResponse } from './types';
 
 export enum ErrorCodes {
   InvalidCredentials = -5,
