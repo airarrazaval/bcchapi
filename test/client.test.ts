@@ -1,6 +1,6 @@
-import { expect, describe, it, vi, afterEach, afterAll, beforeEach } from 'vitest';
-import { Client } from '../src';
+import { expect, describe, it, vi, afterEach, beforeEach } from 'vitest';
 import {
+  Client,
   Frequency,
   InvalidCredentialsError,
   InvalidSeriesError,
@@ -8,9 +8,8 @@ import {
 } from '../src';
 import fetchMock from './mocks/fetch.mock';
 import fixtures from './fixtures';
-import { reverseDate } from '../src/helpers';
+import reverseDate from '../src/helpers/reverse-date';
 
-// global.fetch = vi.fn().mockImplementation(fetchMock);
 const fetchSpy = vi.spyOn(global, 'fetch').mockImplementation(fetchMock);
 
 describe('Client', () => {
@@ -23,7 +22,7 @@ describe('Client', () => {
     user: '',
     pass: '',
   });
-  
+
   it('should create a Client instance', () => {
     expect(client).toBeInstanceOf(Client);
   });
@@ -37,46 +36,62 @@ describe('Client', () => {
     });
 
     it('should throw an error if series is not a non-empty string', async () => {
-      await expect(client.getSeries({
-        series: undefined as unknown as string,
-      })).rejects.toThrow('series must be a non-empty string');
-      await expect(client.getSeries({
-        series: '',
-      })).rejects.toThrow('series must be a non-empty string');
+      await expect(
+        client.getSeries({
+          series: undefined as unknown as string,
+        }),
+      ).rejects.toThrow('series must be a non-empty string');
+      await expect(
+        client.getSeries({
+          series: '',
+        }),
+      ).rejects.toThrow('series must be a non-empty string');
 
       expect(fetchSpy).not.toHaveBeenCalled();
     });
 
     it('should throw an error if date range is invalid', async () => {
-      await expect(client.getSeries({
-        series: 'TEST',
-        since: 'invalid',
-      })).rejects.toThrow('"since" is not a valid date string or Date object');
-      await expect(client.getSeries({
-        series: 'TEST',
-        since: new Date('invalid'),
-      })).rejects.toThrow('"since" is not a valid date string or Date object');
+      await expect(
+        client.getSeries({
+          series: 'TEST',
+          since: 'invalid',
+        }),
+      ).rejects.toThrow('"since" is not a valid date string or Date object');
+      await expect(
+        client.getSeries({
+          series: 'TEST',
+          since: new Date('invalid'),
+        }),
+      ).rejects.toThrow('"since" is not a valid date string or Date object');
 
-      await expect(client.getSeries({
-        series: 'TEST',
-        until: 'invalid',
-      })).rejects.toThrow('"until" is not a valid date string or Date object');
-      await expect(client.getSeries({
-        series: 'TEST',
-        until: new Date('invalid'),
-      })).rejects.toThrow('"until" is not a valid date string or Date object');
+      await expect(
+        client.getSeries({
+          series: 'TEST',
+          until: 'invalid',
+        }),
+      ).rejects.toThrow('"until" is not a valid date string or Date object');
+      await expect(
+        client.getSeries({
+          series: 'TEST',
+          until: new Date('invalid'),
+        }),
+      ).rejects.toThrow('"until" is not a valid date string or Date object');
 
-      await expect(client.getSeries({
-        series: 'TEST',
-        since: new Date(2020, 0, 1),
-        until: new Date(2000, 0, 1),
-      })).rejects.toThrow('invalid date range');
+      await expect(
+        client.getSeries({
+          series: 'TEST',
+          since: new Date(2020, 0, 1),
+          until: new Date(2000, 0, 1),
+        }),
+      ).rejects.toThrow('invalid date range');
 
       expect(fetchSpy).not.toHaveBeenCalled();
     });
 
     it('should throw error if credentials are invalid', async () => {
-      await expect(invalidClient.getSeries({ series: 'TEST' })).rejects.toThrow(InvalidCredentialsError);
+      await expect(invalidClient.getSeries({ series: 'TEST' })).rejects.toThrow(
+        InvalidCredentialsError,
+      );
       expect(fetchSpy).toHaveBeenCalledTimes(1);
     });
 
@@ -89,16 +104,20 @@ describe('Client', () => {
       const series = await client.getSeries({ series: 'TEST' });
 
       expect(fetchSpy).toHaveBeenCalledTimes(1);
-      
+
       expect(series).toBeDefined();
       expect(series.seriesId).toBe('TEST');
       expect(series.description).toBe('Test');
       expect(series.data).toBeInstanceOf(Array);
       expect(series.data).toHaveLength(15);
-      
+
       for (let i = 0; i < series.data.length; i += 1) {
-        expect(reverseDate(series.data[i].date)).toBe(fixtures.response.getSeriesSuccess.Series.Obs[i].indexDateString);
-        expect(series.data[i].value.toFixed(2)).toBe(fixtures.response.getSeriesSuccess.Series.Obs[i].value);
+        expect(reverseDate(series.data[i].date)).toBe(
+          fixtures.response.getSeriesSuccess.Series.Obs[i].indexDateString,
+        );
+        expect(series.data[i].value.toFixed(2)).toBe(
+          fixtures.response.getSeriesSuccess.Series.Obs[i].value,
+        );
 
         if (Number.isNaN(series.data[i].value)) {
           expect(fixtures.response.getSeriesSuccess.Series.Obs[i].statusCode).toBe('ND');
@@ -111,7 +130,7 @@ describe('Client', () => {
         series: 'TEST',
         until: '2020-12-05',
       });
-      
+
       expect(fetchSpy).toHaveBeenCalledTimes(1);
 
       expect(series).toBeDefined();
@@ -119,10 +138,14 @@ describe('Client', () => {
       expect(series.description).toBe('Test');
       expect(series.data).toBeInstanceOf(Array);
       expect(series.data).toHaveLength(5);
-      
+
       for (let i = 0; i < series.data.length; i += 1) {
-        expect(reverseDate(series.data[i].date)).toBe(fixtures.response.getSeriesSuccess.Series.Obs[i].indexDateString);
-        expect(series.data[i].value.toFixed(2)).toBe(fixtures.response.getSeriesSuccess.Series.Obs[i].value);
+        expect(reverseDate(series.data[i].date)).toBe(
+          fixtures.response.getSeriesSuccess.Series.Obs[i].indexDateString,
+        );
+        expect(series.data[i].value.toFixed(2)).toBe(
+          fixtures.response.getSeriesSuccess.Series.Obs[i].value,
+        );
 
         if (Number.isNaN(series.data[i].value)) {
           expect(fixtures.response.getSeriesSuccess.Series.Obs[i].statusCode).toBe('ND');
@@ -137,14 +160,13 @@ describe('Client', () => {
       });
 
       expect(fetchSpy).toHaveBeenCalledTimes(1);
-      
+
       expect(series).toBeDefined();
       expect(series.seriesId).toBe('TEST');
       expect(series.description).toBe('Test');
       expect(series.data).toBeInstanceOf(Array);
       expect(series.data).toHaveLength(0);
     });
-
   });
 
   describe('searchSeries', () => {
@@ -156,28 +178,36 @@ describe('Client', () => {
     });
 
     it('should throw an error if frequency is not a non-empty string', async () => {
-      await expect(client.searchSeries({
-        frequency: undefined as unknown as Frequency,
-      })).rejects.toThrow('frequency must be a non-empty string');
-      await expect(client.searchSeries({
-        frequency: '' as Frequency,
-      })).rejects.toThrow('frequency must be a non-empty string');
+      await expect(
+        client.searchSeries({
+          frequency: undefined as unknown as Frequency,
+        }),
+      ).rejects.toThrow('frequency must be a non-empty string');
+      await expect(
+        client.searchSeries({
+          frequency: '' as Frequency,
+        }),
+      ).rejects.toThrow('frequency must be a non-empty string');
 
       expect(fetchSpy).not.toHaveBeenCalled();
     });
 
     it('should throw error if credentials are invalid', async () => {
-      await expect(invalidClient.searchSeries({
-        frequency: Frequency.Daily,
-      })).rejects.toThrow(InvalidCredentialsError);
+      await expect(
+        invalidClient.searchSeries({
+          frequency: Frequency.Daily,
+        }),
+      ).rejects.toThrow(InvalidCredentialsError);
 
       expect(fetchSpy).toHaveBeenCalledTimes(1);
     });
 
     it('should throw error if frequency is invalid', async () => {
-      await expect(client.searchSeries({
-        frequency: 'invalid' as Frequency,
-      })).rejects.toThrow(InvalidFrequencyError);
+      await expect(
+        client.searchSeries({
+          frequency: 'invalid' as Frequency,
+        }),
+      ).rejects.toThrow(InvalidFrequencyError);
 
       expect(fetchSpy).toHaveBeenCalledTimes(1);
     });
@@ -188,7 +218,7 @@ describe('Client', () => {
       });
 
       expect(fetchSpy).toHaveBeenCalledTimes(1);
-      
+
       expect(series).toBeInstanceOf(Array);
       expect(series).toHaveLength(1);
     });

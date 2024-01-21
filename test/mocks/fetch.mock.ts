@@ -1,5 +1,5 @@
-import { Frequency } from '../../src/response';
-import { reverseDate } from '../../src/helpers';
+import { Frequency } from '../../src/client';
+import reverseDate from '../../src/helpers/reverse-date';
 import fixtures from '../fixtures';
 
 export default (input: string | URL | Request) => {
@@ -11,7 +11,7 @@ export default (input: string | URL | Request) => {
       json: () => Promise.resolve(fixtures.response.credentialsInvalid),
     } as Response);
   }
-  
+
   if (func === 'GetSeries') {
     if (fixtures.response.getSeriesSuccess.Series.seriesId !== params.get('timeseries')) {
       return Promise.resolve({
@@ -21,15 +21,17 @@ export default (input: string | URL | Request) => {
 
     const firstDate = params.get('firstdate');
     const lastDate = params.get('lastdate');
-    const obs = fixtures.response.getSeriesSuccess.Series.Obs.filter((obs) => {
+    const obs = fixtures.response.getSeriesSuccess.Series.Obs.filter((o) => {
       if (firstDate && lastDate) {
-        return reverseDate(obs.indexDateString) >= firstDate && reverseDate(obs.indexDateString) <= lastDate;
+        return (
+          reverseDate(o.indexDateString) >= firstDate && reverseDate(o.indexDateString) <= lastDate
+        );
       }
       if (firstDate) {
-        return reverseDate(obs.indexDateString) >= firstDate;
+        return reverseDate(o.indexDateString) >= firstDate;
       }
       if (lastDate) {
-        return reverseDate(obs.indexDateString) <= lastDate;
+        return reverseDate(o.indexDateString) <= lastDate;
       }
       return true;
     });
@@ -39,10 +41,11 @@ export default (input: string | URL | Request) => {
     };
 
     return Promise.resolve({
-      json: () => Promise.resolve({
-        ...fixtures.response.getSeriesSuccess,
-        Series: series,
-      }),
+      json: () =>
+        Promise.resolve({
+          ...fixtures.response.getSeriesSuccess,
+          Series: series,
+        }),
     } as Response);
   }
 
@@ -57,7 +60,9 @@ export default (input: string | URL | Request) => {
 
     const response = {
       ...fixtures.response.searchSeriesSuccess,
-      SeriesInfo: fixtures.response.searchSeriesSuccess.SeriesInfos.filter((series) => series.frequencyCode === frequency),
+      SeriesInfo: fixtures.response.searchSeriesSuccess.SeriesInfos.filter(
+        (series) => series.frequencyCode === frequency,
+      ),
     };
 
     return Promise.resolve({
@@ -68,4 +73,4 @@ export default (input: string | URL | Request) => {
   return Promise.resolve({
     json: () => Promise.resolve({}),
   } as Response);
-}
+};
