@@ -1,3 +1,8 @@
-export { Client, ClientConfig, GetSeriesInput, SearchSeriesInput } from './client';
-export { ApiResponse, ErrorResponse, Frequency, GetSeriesResponse, SearchSeriesResponse } from './response';
-export { WebServiceError, InvalidCredentialsError, InvalidFrequencyError, InvalidSeriesError} from './errors';
+export { Client, ClientConfig, Frequency } from './client';
+export { ApiResponse, ErrorResponse, GetSeriesResponse, SearchSeriesResponse } from './types';
+export {
+  WebServiceError,
+  InvalidCredentialsError,
+  InvalidFrequencyError,
+  InvalidSeriesError,
+} from './errors';
