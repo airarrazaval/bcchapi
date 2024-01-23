@@ -1,4 +1,4 @@
-interface SeriesValue {
+export interface SeriesObservation {
   /**
    * Series observed date in DD-MM-YYYY format.
    */
@@ -13,7 +13,7 @@ interface SeriesValue {
   statusCode: 'OK' | 'ND';
 }
 
-interface SeriesHistory {
+export interface SeriesHistory {
   /**
    * Series identifier.
    */
@@ -29,14 +29,14 @@ interface SeriesHistory {
   /**
    * List of series observed values.
    */
-  Obs: SeriesValue[];
+  Obs: SeriesObservation[];
 }
 
-type NullSeries = {
+export type NullSeries = {
   [key in keyof SeriesHistory]: null;
 };
 
-interface SeriesMetadata {
+export interface SeriesMetadata {
   /**
    * Series identifier.
    */
