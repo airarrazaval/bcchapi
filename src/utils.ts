@@ -41,9 +41,9 @@ export function parseGetSeriesResponse<T extends ApiResponse>(response: T): GetS
   if (response.Codigo !== 0) {
     switch (response.Codigo) {
       case ErrorCodes.InvalidCredentials:
-        throw new InvalidCredentialsError();
+        throw new InvalidCredentialsError(response as ApiResponse as ErrorResponse);
       case ErrorCodes.InvalidSeries:
-        throw new InvalidSeriesError();
+        throw new InvalidSeriesError(response as ApiResponse as ErrorResponse);
       default:
         throw new WebServiceError(response as ApiResponse as ErrorResponse);
     }
@@ -68,9 +68,9 @@ export function parseSearchSeriesResponse<T extends ApiResponse>(
   if (response.Codigo !== 0) {
     switch (response.Codigo) {
       case ErrorCodes.InvalidCredentials:
-        throw new InvalidCredentialsError();
+        throw new InvalidCredentialsError(response as ApiResponse as ErrorResponse);
       case ErrorCodes.InvalidFrequency:
-        throw new InvalidFrequencyError();
+        throw new InvalidFrequencyError(response as ApiResponse as ErrorResponse);
       default:
         throw new WebServiceError(response as ApiResponse as ErrorResponse);
     }
