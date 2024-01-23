@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import * as Errors from '../../src/errors';
-import { parseGetSeriesResponse } from '../../src/helpers/parsers';
+import { parseGetSeriesResponse } from '../../src/utils';
 import { ApiResponse } from '../../src/types';
 import fixtures from '../fixtures';
 

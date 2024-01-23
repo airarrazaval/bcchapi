@@ -6,9 +6,9 @@ import {
   InvalidSeriesError,
   InvalidFrequencyError,
 } from '../src';
+import { reverseDate } from '../src/utils';
 import fetchMock from './mocks/fetch.mock';
 import fixtures from './fixtures';
-import reverseDate from '../src/helpers/reverse-date';
 
 const fetchSpy = vi.spyOn(global, 'fetch').mockImplementation(fetchMock);
 

@@ -1,5 +1,5 @@
 import { Frequency } from '../../src/client';
-import reverseDate from '../../src/helpers/reverse-date';
+import { reverseDate } from '../../src/utils';
 import fixtures from '../fixtures';
 
 export default (input: string | URL | Request) => {

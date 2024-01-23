@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import isValidDate from '../../src/helpers/is-valid-date';
+import { isValidDate } from '../../src/utils';
 
 describe('isValidDate', () => {
   it('should return true if the date is valid', () => {

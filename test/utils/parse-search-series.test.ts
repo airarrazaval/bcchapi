@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import * as Errors from '../../src/errors';
 import { ApiResponse } from '../../src/types';
-import { parseSearchSeriesResponse } from '../../src/helpers/parsers';
+import { parseSearchSeriesResponse } from '../../src/utils';
 import fixtures from '../fixtures';
 
 describe('parseSearchSeriesResponse', () => {

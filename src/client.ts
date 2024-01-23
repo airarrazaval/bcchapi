@@ -1,8 +1,7 @@
 import * as querystring from 'node:querystring';
 import * as assert from 'node:assert/strict';
 import { GetSeriesResponse, SearchSeriesResponse, ApiResponse } from './types';
-import { parseGetSeriesResponse, parseSearchSeriesResponse } from './helpers/parsers';
-import isValidDate from './helpers/is-valid-date';
+import { isValidDate, parseGetSeriesResponse, parseSearchSeriesResponse } from './utils';
 
 export interface ClientConfig {
   /**

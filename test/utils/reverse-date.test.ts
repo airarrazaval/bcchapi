@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import reverseDate from '../../src/helpers/reverse-date';
+import { reverseDate } from '../../src/utils';
 
 describe('reverseDate', () => {
   it('should reverse correctly a date in DD-MM-YYYY format', () => {
