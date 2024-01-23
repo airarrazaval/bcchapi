@@ -1,6 +1,6 @@
 {
   "name": "bcchapi",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "API para acceder al Web Service del Banco Central de Chile.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
