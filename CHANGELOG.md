@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.6] - 2024-06-13
+
+### Changed
+
+- Updated the following dependencies:
+  - `@types/node` from `20.12.7` to `2.14.2`
+  - `@vitest/coverage-v8` from `1.5.1` to `1.6.0`
+  - `rimraf` from `5.0.5` to `5.0.7`
+  - `prettier` from `3.2.5` to `3.3.2`
+  - `vitest` from `1.5.1` to `1.6.0`
+
 ## [1.0.5] - 2024-04-24
 
 ### Added
