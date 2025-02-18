@@ -1,12 +1,12 @@
 import { describe, it, expect } from 'vitest';
 import * as Errors from '../../src/errors';
 import { ApiResponse } from '../../src/types';
-import { parseSearchSeriesResponse } from '../../src/utils';
+import { handleSearchSeriesResponse } from '../../src/handlers';
 import fixtures from '../fixtures';
 
-describe('parseSearchSeriesResponse', () => {
+describe('handleSearchSeriesResponse', () => {
   it('should parse correctly a valid response', () => {
-    const parsed = parseSearchSeriesResponse(
+    const parsed = handleSearchSeriesResponse(
       fixtures.response.searchSeriesSuccess as unknown as ApiResponse,
     );
 
@@ -32,17 +32,17 @@ describe('parseSearchSeriesResponse', () => {
 
   it('should throw an InvalidCredentialsError if the response code is -5', () => {
     expect(() =>
-      parseSearchSeriesResponse(fixtures.response.credentialsInvalid as unknown as ApiResponse),
+      handleSearchSeriesResponse(fixtures.response.credentialsInvalid as unknown as ApiResponse),
     ).toThrow(Errors.InvalidCredentialsError);
   });
 
   it('should throw an InvalidFrequencyError if the response code is -1', () => {
     expect(() =>
-      parseSearchSeriesResponse(fixtures.response.searchSeriesInvalid as unknown as ApiResponse),
+      handleSearchSeriesResponse(fixtures.response.searchSeriesInvalid as unknown as ApiResponse),
     ).toThrow(Errors.InvalidFrequencyError);
   });
 
   it('should throw a ResponseError if the response code is unknown', () => {
-    expect(() => parseSearchSeriesResponse({} as ApiResponse)).toThrow(Errors.WebServiceError);
+    expect(() => handleSearchSeriesResponse({} as ApiResponse)).toThrow(Errors.WebServiceError);
   });
 });
