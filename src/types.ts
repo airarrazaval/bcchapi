@@ -1,3 +1,5 @@
+export type StatusCode = 'OK' | 'ND';
+
 export interface SeriesObservation {
   /**
    * Series observed date in DD-MM-YYYY format.
@@ -10,7 +12,7 @@ export interface SeriesObservation {
   /**
    * Series observed value status code (ND = no data recorded).
    */
-  statusCode: 'OK' | 'ND';
+  statusCode: StatusCode;
 }
 
 export interface SeriesHistory {
@@ -75,20 +77,20 @@ export interface ApiResponse {
   /**
    * Response status code.
    */
-  Codigo: number;
+  readonly Codigo: number;
   /**
    * Response status message.
    */
-  Descripcion: string;
+  readonly Descripcion: string;
 
   /**
    * Series historic information.
    */
-  Series: SeriesHistory | NullSeries;
+  readonly Series: Readonly<SeriesHistory | NullSeries>;
   /**
    * Series metadata information.
    */
-  SeriesInfos: SeriesMetadata[];
+  readonly SeriesInfos: ReadonlyArray<SeriesMetadata>;
 }
 
 export interface ErrorResponse extends ApiResponse {
