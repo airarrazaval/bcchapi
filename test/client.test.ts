@@ -112,8 +112,8 @@ describe('Client', () => {
       expect(series.data).toHaveLength(15);
 
       for (let i = 0; i < series.data.length; i += 1) {
-        expect(reverseDate(series.data[i].date)).toBe(
-          fixtures.response.getSeriesSuccess.Series.Obs[i].indexDateString,
+        expect(series.data[i].date).toBe(
+          reverseDate(fixtures.response.getSeriesSuccess.Series.Obs[i].indexDateString),
         );
         expect(series.data[i].value.toFixed(2)).toBe(
           fixtures.response.getSeriesSuccess.Series.Obs[i].value,
@@ -140,8 +140,8 @@ describe('Client', () => {
       expect(series.data).toHaveLength(5);
 
       for (let i = 0; i < series.data.length; i += 1) {
-        expect(reverseDate(series.data[i].date)).toBe(
-          fixtures.response.getSeriesSuccess.Series.Obs[i].indexDateString,
+        expect(series.data[i].date).toBe(
+          reverseDate(fixtures.response.getSeriesSuccess.Series.Obs[i].indexDateString),
         );
         expect(series.data[i].value.toFixed(2)).toBe(
           fixtures.response.getSeriesSuccess.Series.Obs[i].value,
