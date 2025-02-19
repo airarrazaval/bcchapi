@@ -1,12 +1,12 @@
 import { describe, it, expect } from 'vitest';
 import * as Errors from '../../src/errors';
-import { parseGetSeriesResponse } from '../../src/utils';
+import { handleGetSeriesResponse } from '../../src/handlers';
 import { ApiResponse } from '../../src/types';
 import fixtures from '../fixtures';
 
-describe('parseGetSeriesResponse', () => {
+describe('handleGetSeriesResponse', () => {
   it('should parse correctly a valid response', () => {
-    const parsed = parseGetSeriesResponse(
+    const parsed = handleGetSeriesResponse(
       fixtures.response.getSeriesSuccess as unknown as ApiResponse,
     );
 
@@ -29,17 +29,17 @@ describe('parseGetSeriesResponse', () => {
 
   it('should throw an InvalidCredentialsError if the response code is -5', () => {
     expect(() =>
-      parseGetSeriesResponse(fixtures.response.credentialsInvalid as unknown as ApiResponse),
+      handleGetSeriesResponse(fixtures.response.credentialsInvalid as unknown as ApiResponse),
     ).toThrow(Errors.InvalidCredentialsError);
   });
 
   it('should throw an InvalidSeriesError if the response code is -50', () => {
     expect(() =>
-      parseGetSeriesResponse(fixtures.response.getSeriesInvalid as unknown as ApiResponse),
+      handleGetSeriesResponse(fixtures.response.getSeriesInvalid as unknown as ApiResponse),
     ).toThrow(Errors.InvalidSeriesError);
   });
 
   it('should throw a ResponseError if the response code is unknown', () => {
-    expect(() => parseGetSeriesResponse({} as ApiResponse)).toThrow(Errors.WebServiceError);
+    expect(() => handleGetSeriesResponse({} as ApiResponse)).toThrow(Errors.WebServiceError);
   });
 });

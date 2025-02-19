@@ -5,7 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.0.7] - 2025-02-19
+
+### Changed
+
+- Moved API response handlers from `utils.ts` to new `handlers.ts` file
+- Improved date handling in `utils.ts`
+- Fixed date validation in client test
+- Updated dependencies:
+  - `@vitest/coverage-v8` from `^1.6.0` to `^3.0.6`
+  - `rimraf` from `^5.0.7` to `^6.0.1`
+  - `vitest` from `^1.6.0` to `^3.0.6`
 
 ## [1.0.6] - 2024-06-13
 

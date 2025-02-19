@@ -1,7 +1,8 @@
 import * as querystring from 'node:querystring';
 import * as assert from 'node:assert/strict';
 import { GetSeriesResponse, SearchSeriesResponse, ApiResponse } from './types';
-import { isValidDate, parseGetSeriesResponse, parseSearchSeriesResponse } from './utils';
+import { handleGetSeriesResponse, handleSearchSeriesResponse } from './handlers';
+import { isValidDate } from './utils';
 
 export interface ClientConfig {
   /**
@@ -25,7 +26,6 @@ export class Client {
   static apiURL = 'https://si3.bcentral.cl/SieteRestWS/SieteRestWS.ashx';
 
   private username: string;
-
   private password: string;
 
   constructor(config: ClientConfig) {
@@ -33,14 +33,14 @@ export class Client {
     this.password = config.pass;
   }
 
-  async request(query: Record<string, string>): Promise<ApiResponse> {
+  async request<T extends ApiResponse>(query: Record<string, string>): Promise<T> {
     const queryString = querystring.stringify({
       user: this.username,
       pass: this.password,
       ...query,
     });
 
-    return (await fetch(`${Client.apiURL}?${queryString}`)).json() as Promise<ApiResponse>;
+    return (await fetch(`${Client.apiURL}?${queryString}`)).json() as Promise<T>;
   }
 
   /**
@@ -83,7 +83,7 @@ export class Client {
       assert.ok(query.firstdate <= query.lastdate, 'invalid date range');
     }
 
-    return this.request(query).then(parseGetSeriesResponse);
+    return this.request(query).then(handleGetSeriesResponse);
   }
 
   /**
@@ -104,6 +104,6 @@ export class Client {
       function: 'SearchSeries',
     };
 
-    return this.request(query).then(parseSearchSeriesResponse);
+    return this.request(query).then(handleSearchSeriesResponse);
   }
 }
