@@ -1,4 +1,3 @@
-import * as querystring from 'node:querystring';
 import * as assert from 'node:assert/strict';
 import { GetSeriesResponse, SearchSeriesResponse, ApiResponse } from './types';
 import { handleGetSeriesResponse, handleSearchSeriesResponse } from './handlers';
@@ -34,11 +33,11 @@ export class Client {
   }
 
   async request<T extends ApiResponse>(query: Record<string, string>): Promise<T> {
-    const queryString = querystring.stringify({
+    const queryString = new URLSearchParams({
       user: this.username,
       pass: this.password,
       ...query,
-    });
+    }).toString();
 
     return (await fetch(`${Client.apiURL}?${queryString}`)).json() as Promise<T>;
   }
