@@ -7,6 +7,20 @@
     "url": "https://github.com/airarrazaval/bcchapi/issues"
   },
   "license": "MIT",
+  "keywords": [
+    "bcch",
+    "banco-central",
+    "banco-central-de-chile",
+    "chile",
+    "economics",
+    "macroeconomics",
+    "api",
+    "api-client",
+    "time-series",
+    "finance",
+    "uf",
+    "utm"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/airarrazaval/bcchapi.git"
