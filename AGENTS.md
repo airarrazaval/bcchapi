@@ -72,7 +72,7 @@ npm run clean          # remove dist/ and docs/
 npm run changelog      # regenerate CHANGELOG.md from commits (run before releasing)
 ```
 
-Always run `npm run check` after making changes.
+Always run `npm run format && npm run check` after making changes.
 
 ---
 
@@ -705,7 +705,7 @@ Quick-reference checklist. Full rules for each step are in the sections above.
 - [ ] **Red** — write failing tests covering success path, error cases, and edge values; run `npm test`, they must fail
 - [ ] **Green** — write minimum `src/` code to pass tests; use `npm run dev` for watch mode
 - [ ] **Refactor** — clean up with tests staying green; run `npm test`
-- [ ] **Validate** — `npm run check`; fix any issues with `npm run lint:fix` and `npm run format`
+- [ ] **Validate** — `npm run format && npm run check`; fix any remaining issues with `npm run lint:fix`
 - [ ] **Commit** — `git commit -m "feat: description"` (→ [Commits](#commits))
 - [ ] Repeat **Red → Green → Refactor → Validate → Commit** for each requirement
 
