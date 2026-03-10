@@ -6,6 +6,15 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ---
 
+## [2.0.1] - 2026-03-10
+
+### Changed
+
+- Updated README with full API reference and usage examples
+- Cleaned up CHANGELOG to start from v2.0.0
+
+---
+
 ## [2.0.0] - 2026-03-10
 
 ### Added
@@ -19,4 +28,5 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ---
 
+[2.0.1]: https://github.com/airarrazaval/bcchapi/compare/v2.0.0...v2.0.1
 [2.0.0]: https://github.com/airarrazaval/bcchapi/releases/tag/v2.0.0
