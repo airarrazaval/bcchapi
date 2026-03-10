@@ -1,5 +1,5 @@
 export { Client } from './client.js';
-export { ApiError, HttpError } from './types.js';
+export { ApiError, HttpError } from './errors.js';
 export type {
   Cache,
   ClientOptions,

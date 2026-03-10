@@ -2,25 +2,25 @@
   "name": "bcchapi",
   "version": "2.2.1",
   "description": "Node.js wrapper for the Banco Central de Chile API. Features a fully typed API client and utility tools to streamline macroeconomic data integration.",
+  "keywords": [
+    "api",
+    "api-client",
+    "banco-central",
+    "banco-central-de-chile",
+    "bcch",
+    "chile",
+    "economics",
+    "finance",
+    "macroeconomics",
+    "time-series",
+    "uf",
+    "utm"
+  ],
   "homepage": "https://github.com/airarrazaval/bcchapi#readme",
   "bugs": {
     "url": "https://github.com/airarrazaval/bcchapi/issues"
   },
   "license": "MIT",
-  "keywords": [
-    "bcch",
-    "banco-central",
-    "banco-central-de-chile",
-    "chile",
-    "economics",
-    "macroeconomics",
-    "api",
-    "api-client",
-    "time-series",
-    "finance",
-    "uf",
-    "utm"
-  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/airarrazaval/bcchapi.git"
