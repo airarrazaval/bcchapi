@@ -683,8 +683,9 @@ Review the output before committing. If commits in `[Unreleased]` were mislabell
 ### Publish Checklist
 
 - [ ] All tests pass (`npm test`)
+- [ ] `README.md` reflects all new or changed public API since the last release
 - [ ] `npm run changelog` — regenerates `CHANGELOG.md`; review the output
-- [ ] `git add CHANGELOG.md && git commit -m "chore: release vX.Y.Z"` (use the version printed by git-cliff)
+- [ ] `git add README.md CHANGELOG.md && git commit -m "chore: release vX.Y.Z"` (use the version printed by git-cliff)
 - [ ] `npm version patch` (or `minor` / `major` — must match the version git-cliff determined)
 - [ ] `npm pack --dry-run` — verify published contents
 - [ ] No uncommitted changes (`git status` is clean)
@@ -710,9 +711,11 @@ Quick-reference checklist. Full rules for each step are in the sections above.
 ### Pull Request
 
 - [ ] `git push -u origin feat/my-feature`
+- [ ] Update `README.md` if the PR adds, removes, or changes any public API, option, or usage pattern
 - [ ] Open PR against `main` and fill in the pull request template:
   - Select the correct type of change
   - Confirm tests are added or updated
+  - Confirm `README.md` is up to date
   - Confirm `CHANGELOG.md` is updated under `[Unreleased]`
   - Confirm `npm run typecheck`, `npm run lint`, and `npm test` all pass
 - [ ] **Stop. Inform the user. Wait for them to review and merge.**
@@ -720,8 +723,9 @@ Quick-reference checklist. Full rules for each step are in the sections above.
 ### Release (on `main` after merge)
 
 - [ ] `git checkout main && git pull`
+- [ ] Review `README.md` — ensure it reflects all new or changed public API introduced since the last release
 - [ ] `npm run changelog` — regenerates `CHANGELOG.md` from commits; review the output (→ [Updating the Changelog](#updating-the-changelog))
-- [ ] `git add CHANGELOG.md && git commit -m "chore: release vX.Y.Z"` (use the version printed by git-cliff)
+- [ ] `git add README.md CHANGELOG.md && git commit -m "chore: release vX.Y.Z"` (use the version printed by git-cliff)
 - [ ] `npm version patch` (or `minor` / `major` — must match the version git-cliff determined)
 - [ ] `npm pack --dry-run` — verify published contents (→ [Verifying Package Contents](#verifying-package-contents))
 - [ ] `git push --follow-tags` — the `publish` workflow triggers automatically; do not run `npm publish` manually

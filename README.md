@@ -75,6 +75,39 @@ const monthlySeries = await client.searchSeries('MONTHLY');
 console.log(monthlySeries.map((s) => s.englishTitle));
 ```
 
+### Enable caching
+
+```ts
+import { Client } from 'bcchapi/client';
+import { MemoryCache } from 'bcchapi/cache';
+
+const client = new Client({
+  user: 'me@example.com',
+  pass: 'secret',
+  cache: new MemoryCache({ defaultTtlMs: 60 * 60 * 1000 }), // 1 hour
+});
+
+// Repeated calls with the same arguments hit the cache — no HTTP request
+const data = await client.getSeries(SERIES.PRICES.UF);
+```
+
+Bring your own backend by implementing the `Cache` interface:
+
+```ts
+import type { Cache } from 'bcchapi/cache';
+
+const redisCache: Cache = {
+  get: (key) => {
+    /* ... */
+  },
+  set: (key, value, ttlMs) => {
+    /* ... */
+  },
+};
+
+const client = new Client({ user, pass, cache: redisCache });
+```
+
 ### Error handling
 
 ```ts
@@ -102,11 +135,13 @@ try {
 
 #### `new Client(options)`
 
-| Option  | Type           | Description                                                |
-| ------- | -------------- | ---------------------------------------------------------- |
-| `user`  | `string`       | BCCH account email                                         |
-| `pass`  | `string`       | BCCH account password                                      |
-| `fetch` | `typeof fetch` | Custom fetch implementation (optional, useful for testing) |
+| Option       | Type           | Description                                                                       |
+| ------------ | -------------- | --------------------------------------------------------------------------------- |
+| `user`       | `string`       | BCCH account email                                                                |
+| `pass`       | `string`       | BCCH account password                                                             |
+| `fetch`      | `typeof fetch` | Custom fetch implementation (optional, useful for testing)                        |
+| `cache`      | `Cache`        | Cache backend (optional) — any object satisfying the `Cache` interface            |
+| `cacheTtlMs` | `number`       | TTL in milliseconds passed to `cache.set` on every successful response (optional) |
 
 #### `client.getSeries(seriesId, options?)`
 
@@ -125,6 +160,27 @@ Returns `Promise<SeriesData>`.
 Returns metadata for all series with the given frequency. `frequency` is one of `'DAILY' | 'MONTHLY' | 'QUARTERLY' | 'ANNUAL'`.
 
 Returns `Promise<SeriesInfo[]>`.
+
+### `bcchapi/cache`
+
+#### `Cache` interface
+
+Minimal interface for plugging in any cache backend:
+
+```ts
+interface Cache {
+  get(key: string): unknown;
+  set(key: string, value: unknown, ttlMs?: number): void;
+}
+```
+
+#### `new MemoryCache(options?)`
+
+Built-in in-memory cache. Entries are evicted lazily on `get` — no background timers.
+
+| Option         | Type     | Description                                                      |
+| -------------- | -------- | ---------------------------------------------------------------- |
+| `defaultTtlMs` | `number` | Default TTL in milliseconds. Omit for entries that never expire. |
 
 ### `bcchapi/series`
 
