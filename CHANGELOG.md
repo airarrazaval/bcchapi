@@ -6,27 +6,64 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ---
 
-## [2.0.1] - 2026-03-10
+## [2.1.0] - 2026-03-10
 
-### Changed
-
-- Updated README with full API reference and usage examples
-- Cleaned up CHANGELOG to start from v2.0.0
-
----
-
-## [2.0.0] - 2026-03-10
 
 ### Added
 
-- `bcchapi/client` — typed HTTP client (`Client`, `ApiError`, `HttpError`) for the Banco Central de Chile REST API
-- `bcchapi/series` — curated `SERIES` constants covering exchange rates, prices, interest rates, money, national accounts, external sector, employment, public finances, and capital markets
-- `bcchapi/utils` — observation transform functions (`parseValue`, `filterValid`, `toNumbers`, `toMap`, `toArrays`, `parseObservationDate`, `formatQueryDate`) and statistics functions (`mean`, `stdDev`, `min`, `max`, `periodVariation`, `annualVariation`, `rollingMean`)
-- ESM-only output targeting Node.js >= 24
-- Full TypeScript declarations and source maps
-- npm provenance via GitHub Actions (SLSA)
+- Add pluggable caching layer to Client (bcchapi/cache)
+
+
+### Changed
+
+- Fix formatting
+
 
 ---
+## [2.0.1] - 2026-03-10
 
-[2.0.1]: https://github.com/airarrazaval/bcchapi/compare/v2.0.0...v2.0.1
-[2.0.0]: https://github.com/airarrazaval/bcchapi/releases/tag/v2.0.0
+
+### Changed
+
+- Release v2.0.1
+- Rewrite CHANGELOG for v2.0.0 initial release
+- Write README for bcchapi v2
+
+
+---
+## [2.0.0] - 2026-03-10
+
+
+### Changed
+
+- Rename package to bcchapi and bump to v2.0.0
+
+
+### Fixed
+
+- Update repository URLs to bcchapi after GitHub rename
+
+
+---
+## [0.1.0] - 2026-03-10
+
+
+### Added
+
+- Wire up root src/index.ts re-exports and replace template test
+- Add date, transform, and stats utility functions
+- Add SERIES constants with curated well-known series IDs
+- Add Client, ApiError, and HttpError with full test coverage
+
+
+### Changed
+
+- Release v0.1.0
+
+
+### Fixed
+
+- Set publishConfig access to public for npm provenance
+
+
+---
