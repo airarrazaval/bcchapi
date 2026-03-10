@@ -1,5 +1,11 @@
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "globals": {
+    "URL": "readonly",
+    "URLSearchParams": "readonly",
+    "Response": "readonly",
+    "fetch": "readonly"
+  },
   "rules": {
     "no-console": "warn",
     "no-debugger": "error",

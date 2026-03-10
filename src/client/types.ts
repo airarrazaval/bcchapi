@@ -1,0 +1,173 @@
+/**
+ * Credentials and configuration for {@link Client}.
+ */
+export interface ClientOptions {
+  /** BCCH account email. */
+  user: string;
+
+  /** BCCH account password. */
+  pass: string;
+
+  /**
+   * HTTP client used for all requests.
+   *
+   * Defaults to the global `fetch`. Inject a custom implementation in tests
+   * to avoid real network calls.
+   *
+   * @defaultValue `globalThis.fetch`
+   */
+  fetch?: typeof globalThis.fetch;
+}
+
+/**
+ * A single observation returned by the BCCH API.
+ *
+ * Dates are in the wire format `"DD-MM-YYYY"` as returned by the API.
+ * Values are raw numeric strings; an empty string indicates a data gap.
+ * Use {@link https://github.com/airarrazaval/bcch | bcch/utils} to parse
+ * and transform observations.
+ */
+export interface Observation {
+  /** Observation date in `"DD-MM-YYYY"` format. */
+  indexDateString: string;
+
+  /**
+   * Numeric value as a string.
+   *
+   * An empty string (`""`) indicates a gap in the series (no observation
+   * for that date). Use `parseValue` from `bcch/utils` to convert to a
+   * `number | null`.
+   */
+  value: string;
+
+  /** Observation status code (e.g. `"OK"`, `"NO_OBS"`). */
+  statusCode: string;
+}
+
+/**
+ * Time series data returned by {@link Client.getSeries}.
+ */
+export interface SeriesData {
+  /** BCCH series identifier. */
+  seriesId: string;
+
+  /** Series description in Spanish. */
+  descripEsp: string;
+
+  /** Series description in English. */
+  descripIng: string;
+
+  /** Ordered array of observations, earliest first. */
+  observations: Observation[];
+}
+
+/**
+ * Date range filter for {@link Client.getSeries}.
+ */
+export interface GetSeriesOptions {
+  /**
+   * Start date in `"YYYY-MM-DD"` format.
+   *
+   * Defaults to the earliest available observation when omitted.
+   */
+  firstdate?: string;
+
+  /**
+   * End date in `"YYYY-MM-DD"` format.
+   *
+   * Defaults to the most recent available observation when omitted.
+   */
+  lastdate?: string;
+}
+
+/**
+ * Metadata for a single series returned by {@link Client.searchSeries}.
+ */
+export interface SeriesInfo {
+  /** BCCH series identifier. */
+  seriesId: string;
+
+  /** Frequency code (e.g. `"DAILY"`, `"MONTHLY"`). */
+  frequencyCode: string;
+
+  /** Series title in Spanish. */
+  spanishTitle: string;
+
+  /** Series title in English. */
+  englishTitle: string;
+
+  /** Date of the first available observation in `"DD-MM-YYYY"` format. */
+  firstObservation: string;
+
+  /** Date of the last available observation in `"DD-MM-YYYY"` format. */
+  lastObservation: string;
+
+  /** Date the series was last updated in `"DD-MM-YYYY"` format. */
+  updatedAt: string;
+
+  /** Date the series was created in `"DD-MM-YYYY"` format. */
+  createdAt: string;
+}
+
+/**
+ * Observation frequency accepted by {@link Client.searchSeries}.
+ */
+export type Frequency = 'DAILY' | 'MONTHLY' | 'QUARTERLY' | 'ANNUAL';
+
+// ---------------------------------------------------------------------------
+// Errors
+// ---------------------------------------------------------------------------
+
+/**
+ * Thrown when the BCCH API returns a non-zero `Codigo` in the response body.
+ *
+ * @example
+ * ```ts
+ * try {
+ *   await client.getSeries('INVALID');
+ * } catch (err) {
+ *   if (err instanceof ApiError) {
+ *     console.error(`API error ${err.codigo}: ${err.descripcion}`);
+ *   }
+ * }
+ * ```
+ */
+export class ApiError extends Error {
+  /** Non-zero `Codigo` value from the API response. */
+  readonly codigo: number;
+
+  /** `Descripcion` string from the API response. */
+  readonly descripcion: string;
+
+  constructor(message: string, codigo: number, descripcion: string) {
+    super(message);
+    this.name = 'ApiError';
+    this.codigo = codigo;
+    this.descripcion = descripcion;
+  }
+}
+
+/**
+ * Thrown when the BCCH API returns a non-ok HTTP status code.
+ *
+ * @example
+ * ```ts
+ * try {
+ *   await client.getSeries('F022.TPM.TIN.D001.NO.Z.D');
+ * } catch (err) {
+ *   if (err instanceof HttpError) {
+ *     console.error(`HTTP ${err.status}`);
+ *   }
+ * }
+ * ```
+ */
+export class HttpError extends Error {
+  /** HTTP status code. */
+  readonly status: number;
+
+  constructor(message: string, status: number) {
+    super(message);
+    this.name = 'HttpError';
+    this.status = status;
+  }
+}
