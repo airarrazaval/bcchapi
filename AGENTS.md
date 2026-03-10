@@ -84,7 +84,7 @@ Always run `npm run typecheck && npm run lint` after making changes.
 | Classes, interfaces, types, enums                     | `UpperCamelCase` |
 | Variables, parameters, functions, methods, properties | `lowerCamelCase` |
 | Global constants, enum values                         | `CONSTANT_CASE`  |
-| Files                                                 | `snake_case`     |
+| Files                                                 | `kebab-case`     |
 | Namespace imports                                     | `lowerCamelCase` |
 
 - Treat abbreviations as whole words: `loadHttpUrl`, not `loadHTTPURL`

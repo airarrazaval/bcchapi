@@ -4,7 +4,8 @@
     "URL": "readonly",
     "URLSearchParams": "readonly",
     "Response": "readonly",
-    "fetch": "readonly"
+    "fetch": "readonly",
+    "setTimeout": "readonly"
   },
   "rules": {
     "no-console": "warn",

@@ -1,5 +1,6 @@
 export { Client, ApiError, HttpError } from './client/index.js';
 export type {
+  Cache,
   ClientOptions,
   Frequency,
   GetSeriesOptions,
@@ -7,6 +8,9 @@ export type {
   SeriesData,
   SeriesInfo,
 } from './client/index.js';
+
+export { MemoryCache } from './cache/index.js';
+export type { MemoryCacheOptions } from './cache/index.js';
 
 export { SERIES } from './series/index.js';
 
