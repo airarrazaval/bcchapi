@@ -1,4 +1,4 @@
-import { ApiError, HttpError } from './types.js';
+import { ApiError, HttpError } from './errors.js';
 import type {
   Cache,
   ClientOptions,
