@@ -1,15 +1,15 @@
 {
-  "name": "nodejs-library-template",
+  "name": "bcch",
   "version": "0.0.1",
-  "description": "",
-  "homepage": "https://github.com/airarrazaval/nodejs-library-template#readme",
+  "description": "Node.js wrapper for the Banco Central de Chile API. Features a fully typed API client and utility tools to streamline macroeconomic data integration.",
+  "homepage": "https://github.com/airarrazaval/bcch#readme",
   "bugs": {
-    "url": "https://github.com/airarrazaval/nodejs-library-template/issues"
+    "url": "https://github.com/airarrazaval/bcch/issues"
   },
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/airarrazaval/nodejs-library-template.git"
+    "url": "https://github.com/airarrazaval/bcch.git"
   },
   "files": [
     "dist",
@@ -24,6 +24,21 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
       "default": "./dist/index.js"
+    },
+    "./client": {
+      "types": "./dist/client/index.d.ts",
+      "import": "./dist/client/index.js",
+      "default": "./dist/client/index.js"
+    },
+    "./series": {
+      "types": "./dist/series/index.d.ts",
+      "import": "./dist/series/index.js",
+      "default": "./dist/series/index.js"
+    },
+    "./utils": {
+      "types": "./dist/utils/index.d.ts",
+      "import": "./dist/utils/index.js",
+      "default": "./dist/utils/index.js"
     }
   },
   "scripts": {
