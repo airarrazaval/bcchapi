@@ -11,22 +11,12 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ### Added
 
-- Add git-cliff for automated changelog generation
-- Initial project structure
-
-
-### Changed
-
-- Update CHANGELOG.md
-- Sync AGENTS.md with README
-- Overhaul README
-- Final template fixes
-- Reference PR template in AGENTS.md
-- Add missing template essentials
-- Add npm audit to CI
-- Add npm audit signatures to CI
-- Document GitHub Actions workflows in README
-- Update README and gitignore
+- Add date, transform, and stats utility functions
+- Add SERIES constants with curated well-known series IDs
+- Add Client, ApiError, and HttpError with full test coverage
 
 
 ---
+
+[0.1.0]: https://github.com/airarrazaval/bcch/compare/v0.0.1...v0.1.0
+[Unreleased]: https://github.com/airarrazaval/bcch/compare/v0.1.0...HEAD
