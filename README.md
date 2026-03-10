@@ -228,19 +228,9 @@ All stats functions operate on `Observation[]` and ignore gap values (empty or n
 | `annualVariation(observations, periodsPerYear)` | Year-over-year fractional change (`value[i] / value[i - n] - 1`)         |
 | `rollingMean(observations, window)`             | Rolling mean over a fixed window; `null` if any value in window is a gap |
 
-## Releases
+## Contributing
 
-```sh
-# 1. Regenerate CHANGELOG.md (auto-determines next version)
-npm run changelog
-
-# 2. Commit and bump version
-git add CHANGELOG.md && git commit -m "chore: release vX.Y.Z"
-npm version patch  # or minor / major
-
-# 3. Push — the publish workflow triggers automatically on the version tag
-git push --follow-tags
-```
+See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## License
 

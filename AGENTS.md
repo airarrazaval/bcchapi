@@ -61,6 +61,7 @@ npm run dev            # run tests in watch mode (use during development)
 npm run build          # compile src/ → dist/
 npm run typecheck      # type-check without emitting
 npm test               # run tests
+npm run check          # typecheck + lint + test (run before committing)
 npm run test:coverage  # run tests with coverage
 npm run lint           # lint src/ and tests/
 npm run lint:fix       # lint and auto-fix
@@ -71,7 +72,7 @@ npm run clean          # remove dist/ and docs/
 npm run changelog      # regenerate CHANGELOG.md from commits (run before releasing)
 ```
 
-Always run `npm run typecheck && npm run lint` after making changes.
+Always run `npm run check` after making changes.
 
 ---
 
@@ -561,7 +562,7 @@ The `!` suffix (e.g. `feat!:`) or a `BREAKING CHANGE:` footer marks a breaking c
 ### Pull Requests
 
 - Keep PRs small and focused — one feature or fix per PR
-- All checks must pass before merging: `npm run typecheck && npm run lint && npm test`
+- All checks must pass before merging: `npm run check`
 - Fill in the pull request template (`.github/pull_request_template.md`): select the type of change, confirm all checklist items, and ensure `CHANGELOG.md` is updated under `[Unreleased]`
 - After creating the PR, stop. Do not merge it. Inform the user and wait for them to review and merge.
 
@@ -704,7 +705,7 @@ Quick-reference checklist. Full rules for each step are in the sections above.
 - [ ] **Red** — write failing tests covering success path, error cases, and edge values; run `npm test`, they must fail
 - [ ] **Green** — write minimum `src/` code to pass tests; use `npm run dev` for watch mode
 - [ ] **Refactor** — clean up with tests staying green; run `npm test`
-- [ ] **Validate** — `npm run typecheck && npm run lint && npm test`; fix any issues with `npm run lint:fix` and `npm run format`
+- [ ] **Validate** — `npm run check`; fix any issues with `npm run lint:fix` and `npm run format`
 - [ ] **Commit** — `git commit -m "feat: description"` (→ [Commits](#commits))
 - [ ] Repeat **Red → Green → Refactor → Validate → Commit** for each requirement
 
@@ -717,7 +718,7 @@ Quick-reference checklist. Full rules for each step are in the sections above.
   - Confirm tests are added or updated
   - Confirm `README.md` is up to date
   - Confirm `CHANGELOG.md` is updated under `[Unreleased]`
-  - Confirm `npm run typecheck`, `npm run lint`, and `npm test` all pass
+  - Confirm `npm run check` passes
 - [ ] **Stop. Inform the user. Wait for them to review and merge.**
 
 ### Release (on `main` after merge)

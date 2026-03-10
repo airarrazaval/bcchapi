@@ -59,10 +59,11 @@
     "lint:fix": "oxlint --fix src tests",
     "format": "oxfmt",
     "format:check": "oxfmt --check",
+    "check": "npm run typecheck && npm run lint && npm test",
     "clean": "rm -rf dist docs",
     "docs": "typedoc",
     "changelog": "git-cliff --bump -o CHANGELOG.md",
-    "prepublishOnly": "npm run typecheck && npm run lint && npm run clean && npm run build"
+    "prepublishOnly": "npm run check && npm run clean && npm run build"
   },
   "devDependencies": {
     "@types/node": "^24.12.0",
