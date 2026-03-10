@@ -6,6 +6,15 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ---
 
+## [2.2.1] - 2026-03-10
+
+
+### Changed
+
+- Add npm keywords for discoverability
+
+
+---
 ## [2.2.0] - 2026-03-10
 
 
@@ -16,6 +25,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ### Changed
 
+- Release v2.2.0
 - Always run format before check in dev workflow
 - Fix formatting
 - Add check script and move release docs to CONTRIBUTING.md
