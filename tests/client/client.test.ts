@@ -382,7 +382,9 @@ function makeCache(): Cache & { store: Map<string, unknown> } {
   return {
     store,
     get: (key) => store.get(key),
-    set: (key, value) => { store.set(key, value); },
+    set: (key, value) => {
+      store.set(key, value);
+    },
   };
 }
 
@@ -446,7 +448,9 @@ describe('Client.getSeries — caching', () => {
     const ttlsReceived: Array<number | undefined> = [];
     const cache: Cache = {
       get: () => undefined,
-      set: (_key, _value, ttlMs) => { ttlsReceived.push(ttlMs); },
+      set: (_key, _value, ttlMs) => {
+        ttlsReceived.push(ttlMs);
+      },
     };
 
     const client = new Client({

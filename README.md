@@ -31,7 +31,7 @@ const data = await client.getSeries(SERIES.PRICES.UF, {
   lastdate: '2024-12-31',
 });
 
-console.log(data.descripIng);   // "Unidad de Fomento (UF)"
+console.log(data.descripIng); // "Unidad de Fomento (UF)"
 console.log(data.observations); // [{ indexDateString, value, statusCode }, ...]
 ```
 
@@ -72,7 +72,7 @@ const yoy = annualVariation(cpi.observations, 12);
 
 ```ts
 const monthlySeries = await client.searchSeries('MONTHLY');
-console.log(monthlySeries.map(s => s.englishTitle));
+console.log(monthlySeries.map((s) => s.englishTitle));
 ```
 
 ### Error handling
@@ -102,21 +102,21 @@ try {
 
 #### `new Client(options)`
 
-| Option | Type | Description |
-| ------ | ---- | ----------- |
-| `user` | `string` | BCCH account email |
-| `pass` | `string` | BCCH account password |
+| Option  | Type           | Description                                                |
+| ------- | -------------- | ---------------------------------------------------------- |
+| `user`  | `string`       | BCCH account email                                         |
+| `pass`  | `string`       | BCCH account password                                      |
 | `fetch` | `typeof fetch` | Custom fetch implementation (optional, useful for testing) |
 
 #### `client.getSeries(seriesId, options?)`
 
 Fetches observations for a single time series.
 
-| Parameter | Type | Description |
-| --------- | ---- | ----------- |
-| `seriesId` | `string` | BCCH series identifier |
+| Parameter           | Type     | Description                                                |
+| ------------------- | -------- | ---------------------------------------------------------- |
+| `seriesId`          | `string` | BCCH series identifier                                     |
 | `options.firstdate` | `string` | Start date `"YYYY-MM-DD"` (defaults to earliest available) |
-| `options.lastdate` | `string` | End date `"YYYY-MM-DD"` (defaults to most recent) |
+| `options.lastdate`  | `string` | End date `"YYYY-MM-DD"` (defaults to most recent)          |
 
 Returns `Promise<SeriesData>`.
 
@@ -130,17 +130,17 @@ Returns `Promise<SeriesInfo[]>`.
 
 `SERIES` is a nested `as const` object of curated series IDs grouped by domain:
 
-| Group | Description |
-| ----- | ----------- |
-| `SERIES.EXCHANGE_RATE` | USD/CLP and major currency pairs |
-| `SERIES.PRICES` | UF, UTM, IVP, CPI and components |
-| `SERIES.INTEREST_RATES` | MPR, BCP/BCU sovereign bonds, PDBC rates |
-| `SERIES.MONEY` | M1, M2, M3, bank loans by type |
-| `SERIES.NATIONAL_ACCOUNTS` | Imacec and components |
-| `SERIES.EXTERNAL_SECTOR` | Current account, exports, imports, FDI |
-| `SERIES.EMPLOYMENT` | Unemployment rate, labour force, employed/unemployed |
-| `SERIES.PUBLIC_FINANCES` | Government revenue, expenditure, fiscal balance |
-| `SERIES.CAPITAL_MARKET` | IPSA, stock market capitalisation |
+| Group                      | Description                                          |
+| -------------------------- | ---------------------------------------------------- |
+| `SERIES.EXCHANGE_RATE`     | USD/CLP and major currency pairs                     |
+| `SERIES.PRICES`            | UF, UTM, IVP, CPI and components                     |
+| `SERIES.INTEREST_RATES`    | MPR, BCP/BCU sovereign bonds, PDBC rates             |
+| `SERIES.MONEY`             | M1, M2, M3, bank loans by type                       |
+| `SERIES.NATIONAL_ACCOUNTS` | Imacec and components                                |
+| `SERIES.EXTERNAL_SECTOR`   | Current account, exports, imports, FDI               |
+| `SERIES.EMPLOYMENT`        | Unemployment rate, labour force, employed/unemployed |
+| `SERIES.PUBLIC_FINANCES`   | Government revenue, expenditure, fiscal balance      |
+| `SERIES.CAPITAL_MARKET`    | IPSA, stock market capitalisation                    |
 
 Use [si3.bcentral.cl](https://si3.bcentral.cl/siete) or `client.searchSeries()` to discover additional series IDs beyond the curated set.
 
@@ -148,29 +148,29 @@ Use [si3.bcentral.cl](https://si3.bcentral.cl/siete) or `client.searchSeries()` 
 
 #### Transform functions
 
-| Function | Description |
-| -------- | ----------- |
-| `parseValue(value)` | Parses a value string to `number \| null` (`null` for empty or non-numeric) |
-| `filterValid(observations)` | Returns only observations with parseable numeric values |
-| `toNumbers(observations)` | Maps observations to `Array<number \| null>` |
-| `toMap(observations)` | Returns a `Map<string, number \| null>` keyed by `indexDateString` |
-| `toArrays(observations)` | Returns `{ dates: Date[], values: Array<number \| null> }` |
-| `parseObservationDate(dateString)` | Parses `"DD-MM-YYYY"` to a UTC `Date` |
-| `formatQueryDate(date)` | Formats a `Date` to `"YYYY-MM-DD"` for use in `getSeries` options |
+| Function                           | Description                                                                 |
+| ---------------------------------- | --------------------------------------------------------------------------- |
+| `parseValue(value)`                | Parses a value string to `number \| null` (`null` for empty or non-numeric) |
+| `filterValid(observations)`        | Returns only observations with parseable numeric values                     |
+| `toNumbers(observations)`          | Maps observations to `Array<number \| null>`                                |
+| `toMap(observations)`              | Returns a `Map<string, number \| null>` keyed by `indexDateString`          |
+| `toArrays(observations)`           | Returns `{ dates: Date[], values: Array<number \| null> }`                  |
+| `parseObservationDate(dateString)` | Parses `"DD-MM-YYYY"` to a UTC `Date`                                       |
+| `formatQueryDate(date)`            | Formats a `Date` to `"YYYY-MM-DD"` for use in `getSeries` options           |
 
 #### Statistics functions
 
 All stats functions operate on `Observation[]` and ignore gap values (empty or non-numeric).
 
-| Function | Description |
-| -------- | ----------- |
-| `mean(observations)` | Arithmetic mean |
-| `stdDev(observations)` | Sample standard deviation (Bessel's correction) |
-| `min(observations)` | Minimum value |
-| `max(observations)` | Maximum value |
-| `periodVariation(observations)` | Period-over-period fractional change (`value[i] / value[i-1] - 1`) |
-| `annualVariation(observations, periodsPerYear)` | Year-over-year fractional change (`value[i] / value[i - n] - 1`) |
-| `rollingMean(observations, window)` | Rolling mean over a fixed window; `null` if any value in window is a gap |
+| Function                                        | Description                                                              |
+| ----------------------------------------------- | ------------------------------------------------------------------------ |
+| `mean(observations)`                            | Arithmetic mean                                                          |
+| `stdDev(observations)`                          | Sample standard deviation (Bessel's correction)                          |
+| `min(observations)`                             | Minimum value                                                            |
+| `max(observations)`                             | Maximum value                                                            |
+| `periodVariation(observations)`                 | Period-over-period fractional change (`value[i] / value[i-1] - 1`)       |
+| `annualVariation(observations, periodsPerYear)` | Year-over-year fractional change (`value[i] / value[i - n] - 1`)         |
+| `rollingMean(observations, window)`             | Rolling mean over a fixed window; `null` if any value in window is a gap |
 
 ## Releases
 
