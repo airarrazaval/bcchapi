@@ -1,6 +1,6 @@
 {
   "name": "bcchapi",
-  "version": "2.2.1",
+  "version": "2.2.2",
   "description": "Node.js wrapper for the Banco Central de Chile API. Features a fully typed API client and utility tools to streamline macroeconomic data integration.",
   "keywords": [
     "api",

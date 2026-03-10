@@ -6,11 +6,22 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ---
 
+## [2.2.2] - 2026-03-10
+
+
+### Changed
+
+- Fix formatting
+- Move ApiError and HttpError to errors.ts
+
+
+---
 ## [2.2.1] - 2026-03-10
 
 
 ### Changed
 
+- Release v2.2.1
 - Add npm keywords for discoverability
 
 
