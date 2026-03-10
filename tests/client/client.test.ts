@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 import { ApiError, Client, HttpError } from '../../src/client/index.ts';
+import type { Cache } from '../../src/cache/index.ts';
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -369,5 +370,186 @@ describe('Client.searchSeries', () => {
         return true;
       },
     );
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Client — caching (getSeries)
+// ---------------------------------------------------------------------------
+
+function makeCache(): Cache & { store: Map<string, unknown> } {
+  const store = new Map<string, unknown>();
+  return {
+    store,
+    get: (key) => store.get(key),
+    set: (key, value) => {
+      store.set(key, value);
+    },
+  };
+}
+
+describe('Client.getSeries — caching', () => {
+  it('stores the result in the cache on a miss', async () => {
+    const cache = makeCache();
+    const client = new Client({
+      ...makeCredentials(),
+      fetch: makeFetch(MOCK_GET_SERIES_RESPONSE),
+      cache,
+    });
+
+    const data = await client.getSeries(SERIES_ID);
+    assert.equal(cache.store.size, 1);
+    assert.deepEqual(cache.store.get(`getSeries:${SERIES_ID}::`), data);
+  });
+
+  it('returns the cached value on a hit without making an HTTP call', async () => {
+    const cache = makeCache();
+    let fetchCalls = 0;
+    const countingFetch: typeof globalThis.fetch = async () => {
+      fetchCalls++;
+      return new Response(JSON.stringify(MOCK_GET_SERIES_RESPONSE));
+    };
+
+    const client = new Client({ ...makeCredentials(), fetch: countingFetch, cache });
+
+    await client.getSeries(SERIES_ID);
+    assert.equal(fetchCalls, 1);
+
+    await client.getSeries(SERIES_ID);
+    assert.equal(fetchCalls, 1);
+  });
+
+  it('uses a cache key that includes firstdate and lastdate', async () => {
+    const cache = makeCache();
+    const client = new Client({
+      ...makeCredentials(),
+      fetch: makeFetch(MOCK_GET_SERIES_RESPONSE),
+      cache,
+    });
+
+    await client.getSeries(SERIES_ID, { firstdate: '2024-01-01', lastdate: '2024-12-31' });
+    assert.ok(cache.store.has(`getSeries:${SERIES_ID}:2024-01-01:2024-12-31`));
+  });
+
+  it('treats calls with different date ranges as separate cache entries', async () => {
+    const cache = makeCache();
+    const client = new Client({
+      ...makeCredentials(),
+      fetch: makeFetch(MOCK_GET_SERIES_RESPONSE),
+      cache,
+    });
+
+    await client.getSeries(SERIES_ID, { firstdate: '2024-01-01' });
+    await client.getSeries(SERIES_ID, { firstdate: '2023-01-01' });
+    assert.equal(cache.store.size, 2);
+  });
+
+  it('passes cacheTtlMs to cache.set', async () => {
+    const ttlsReceived: Array<number | undefined> = [];
+    const cache: Cache = {
+      get: () => undefined,
+      set: (_key, _value, ttlMs) => {
+        ttlsReceived.push(ttlMs);
+      },
+    };
+
+    const client = new Client({
+      ...makeCredentials(),
+      fetch: makeFetch(MOCK_GET_SERIES_RESPONSE),
+      cache,
+      cacheTtlMs: 60_000,
+    });
+
+    await client.getSeries(SERIES_ID);
+    assert.deepEqual(ttlsReceived, [60_000]);
+  });
+
+  it('does not cache errors — a subsequent call retries the HTTP request', async () => {
+    const cache = makeCache();
+    let fetchCalls = 0;
+    const failThenSucceed: typeof globalThis.fetch = async () => {
+      fetchCalls++;
+      if (fetchCalls === 1) {
+        return new Response('error', { status: 503 });
+      }
+      return new Response(JSON.stringify(MOCK_GET_SERIES_RESPONSE));
+    };
+
+    const client = new Client({ ...makeCredentials(), fetch: failThenSucceed, cache });
+
+    await assert.rejects(() => client.getSeries(SERIES_ID));
+    assert.equal(cache.store.size, 0);
+
+    await client.getSeries(SERIES_ID);
+    assert.equal(fetchCalls, 2);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Client — caching (searchSeries)
+// ---------------------------------------------------------------------------
+
+describe('Client.searchSeries — caching', () => {
+  it('stores the result in the cache on a miss', async () => {
+    const cache = makeCache();
+    const client = new Client({
+      ...makeCredentials(),
+      fetch: makeFetch(MOCK_SEARCH_SERIES_RESPONSE),
+      cache,
+    });
+
+    const infos = await client.searchSeries('DAILY');
+    assert.equal(cache.store.size, 1);
+    assert.deepEqual(cache.store.get('searchSeries:DAILY'), infos);
+  });
+
+  it('returns the cached value on a hit without making an HTTP call', async () => {
+    const cache = makeCache();
+    let fetchCalls = 0;
+    const countingFetch: typeof globalThis.fetch = async () => {
+      fetchCalls++;
+      return new Response(JSON.stringify(MOCK_SEARCH_SERIES_RESPONSE));
+    };
+
+    const client = new Client({ ...makeCredentials(), fetch: countingFetch, cache });
+
+    await client.searchSeries('MONTHLY');
+    assert.equal(fetchCalls, 1);
+
+    await client.searchSeries('MONTHLY');
+    assert.equal(fetchCalls, 1);
+  });
+
+  it('treats different frequencies as separate cache entries', async () => {
+    const cache = makeCache();
+    const client = new Client({
+      ...makeCredentials(),
+      fetch: makeFetch(MOCK_SEARCH_SERIES_RESPONSE),
+      cache,
+    });
+
+    await client.searchSeries('DAILY');
+    await client.searchSeries('MONTHLY');
+    assert.equal(cache.store.size, 2);
+  });
+
+  it('does not cache errors — a subsequent call retries the HTTP request', async () => {
+    const cache = makeCache();
+    let fetchCalls = 0;
+    const failThenSucceed: typeof globalThis.fetch = async () => {
+      fetchCalls++;
+      if (fetchCalls === 1) {
+        return new Response('error', { status: 503 });
+      }
+      return new Response(JSON.stringify(MOCK_SEARCH_SERIES_RESPONSE));
+    };
+
+    const client = new Client({ ...makeCredentials(), fetch: failThenSucceed, cache });
+
+    await assert.rejects(() => client.searchSeries('DAILY'));
+    assert.equal(cache.store.size, 0);
+
+    await client.searchSeries('DAILY');
+    assert.equal(fetchCalls, 2);
   });
 });

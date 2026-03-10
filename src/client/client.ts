@@ -1,5 +1,6 @@
 import { ApiError, HttpError } from './types.js';
 import type {
+  Cache,
   ClientOptions,
   Frequency,
   GetSeriesOptions,
@@ -65,11 +66,15 @@ export class Client {
   private readonly user: string;
   private readonly pass: string;
   private readonly fetch: typeof globalThis.fetch;
+  private readonly cache: Cache | undefined;
+  private readonly cacheTtlMs: number | undefined;
 
   constructor(options: ClientOptions) {
     this.user = options.user;
     this.pass = options.pass;
     this.fetch = options.fetch ?? globalThis.fetch;
+    this.cache = options.cache;
+    this.cacheTtlMs = options.cacheTtlMs;
   }
 
   /**
@@ -92,6 +97,15 @@ export class Client {
    * ```
    */
   async getSeries(seriesId: string, options?: GetSeriesOptions): Promise<SeriesData> {
+    const cacheKey = `getSeries:${seriesId}:${options?.firstdate ?? ''}:${options?.lastdate ?? ''}`;
+
+    if (this.cache !== undefined) {
+      const cached = this.cache.get(cacheKey);
+      if (cached !== undefined) {
+        return cached as SeriesData;
+      }
+    }
+
     const params = this.baseParams();
     params.set('function', 'GetSeries');
     params.set('timeseries', seriesId);
@@ -114,12 +128,15 @@ export class Client {
       statusCode: obs.statusCode,
     }));
 
-    return {
+    const result: SeriesData = {
       seriesId: raw.Series.seriesId,
       descripEsp: raw.Series.descripEsp,
       descripIng: raw.Series.descripIng,
       observations,
     };
+
+    this.cache?.set(cacheKey, result, this.cacheTtlMs);
+    return result;
   }
 
   /**
@@ -138,6 +155,15 @@ export class Client {
    * ```
    */
   async searchSeries(frequency: Frequency): Promise<SeriesInfo[]> {
+    const cacheKey = `searchSeries:${frequency}`;
+
+    if (this.cache !== undefined) {
+      const cached = this.cache.get(cacheKey);
+      if (cached !== undefined) {
+        return cached as SeriesInfo[];
+      }
+    }
+
     const params = this.baseParams();
     params.set('function', 'SearchSeries');
     params.set('frequency', frequency);
@@ -148,7 +174,7 @@ export class Client {
       throw new ApiError(`BCCH API error: ${raw.Descripcion}`, raw.Codigo, raw.Descripcion);
     }
 
-    return (raw.SeriesInfos ?? []).map((info) => ({
+    const result: SeriesInfo[] = (raw.SeriesInfos ?? []).map((info) => ({
       seriesId: info.seriesId,
       frequencyCode: info.frequencyCode,
       spanishTitle: info.spanishTitle,
@@ -158,6 +184,9 @@ export class Client {
       updatedAt: info.updatedAt,
       createdAt: info.createdAt,
     }));
+
+    this.cache?.set(cacheKey, result, this.cacheTtlMs);
+    return result;
   }
 
   private baseParams(): URLSearchParams {

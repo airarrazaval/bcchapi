@@ -1,3 +1,5 @@
+import type { Cache } from '../cache/types.js';
+
 /**
  * Credentials and configuration for {@link Client}.
  */
@@ -17,7 +19,35 @@ export interface ClientOptions {
    * @defaultValue `globalThis.fetch`
    */
   fetch?: typeof globalThis.fetch;
+
+  /**
+   * Optional cache backend for storing API responses.
+   *
+   * Any object implementing the {@link Cache} interface is accepted — use
+   * `MemoryCache` from `bcchapi/cache` for a zero-config in-memory option,
+   * or provide your own adapter (Redis, SQLite, etc.).
+   *
+   * When omitted, every call makes a fresh HTTP request.
+   *
+   * @example
+   * ```ts
+   * import { MemoryCache } from 'bcchapi/cache';
+   * const client = new Client({ user, pass, cache: new MemoryCache() });
+   * ```
+   */
+  cache?: Cache;
+
+  /**
+   * Time-to-live in milliseconds passed to `cache.set` on every successful
+   * response. Applies to both `getSeries` and `searchSeries`.
+   *
+   * When omitted, `cache.set` is called without a TTL argument and expiry is
+   * determined by the cache implementation.
+   */
+  cacheTtlMs?: number;
 }
+
+export type { Cache } from '../cache/types.js';
 
 /**
  * A single observation returned by the BCCH API.
