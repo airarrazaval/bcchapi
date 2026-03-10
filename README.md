@@ -209,16 +209,16 @@ Use [si3.bcentral.cl](https://si3.bcentral.cl/siete) or `client.searchSeries()` 
 
 #### Transform functions
 
-| Function | Description |
-| --- | --- |
-| `parseValue(value)` | Parses a value string to `number \| null` (`null` for empty or non-numeric) |
-| `filterValid(observations)` | Returns only observations with parseable numeric values |
-| `toNumbers(observations)` | Maps observations to `Array<number \| null>` |
-| `toMap(observations)` | Returns a `Map<string, number \| null>` keyed by `indexDateString` |
-| `toArrays(observations)` | Returns `{ dates: Date[], values: Array<number \| null> }` |
-| `fillForward(observations)` | Fills gap observations by carrying the last valid value forward. Throws if the first observation has no valid value. |
-| `parseObservationDate(dateString)` | Parses `"DD-MM-YYYY"` to a UTC `Date` |
-| `formatQueryDate(date)` | Formats a `Date` to `"YYYY-MM-DD"` for use in `getSeries` options |
+| Function                           | Description                                                                                                          |
+| ---------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| `parseValue(value)`                | Parses a value string to `number \| null` (`null` for empty or non-numeric)                                          |
+| `filterValid(observations)`        | Returns only observations with parseable numeric values                                                              |
+| `toNumbers(observations)`          | Maps observations to `Array<number \| null>`                                                                         |
+| `toMap(observations)`              | Returns a `Map<string, number \| null>` keyed by `indexDateString`                                                   |
+| `toArrays(observations)`           | Returns `{ dates: Date[], values: Array<number \| null> }`                                                           |
+| `fillForward(observations)`        | Fills gap observations by carrying the last valid value forward. Throws if the first observation has no valid value. |
+| `parseObservationDate(dateString)` | Parses `"DD-MM-YYYY"` to a UTC `Date`                                                                                |
+| `formatQueryDate(date)`            | Formats a `Date` to `"YYYY-MM-DD"` for use in `getSeries` options                                                    |
 
 #### Statistics functions
 

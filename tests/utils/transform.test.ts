@@ -1,6 +1,13 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
-import { fillForward, filterValid, parseValue, toArrays, toMap, toNumbers } from '../../src/utils/index.ts';
+import {
+  fillForward,
+  filterValid,
+  parseValue,
+  toArrays,
+  toMap,
+  toNumbers,
+} from '../../src/utils/index.ts';
 import type { Observation } from '../../src/client/index.ts';
 
 // ---------------------------------------------------------------------------
@@ -159,7 +166,11 @@ describe('fillForward', () => {
   });
 
   it('fills a single gap with the previous valid value', () => {
-    const input = [obs('01-01-2024', '1.75'), obs('02-01-2024', '', 'NO_OBS'), obs('03-01-2024', '1.80')];
+    const input = [
+      obs('01-01-2024', '1.75'),
+      obs('02-01-2024', '', 'NO_OBS'),
+      obs('03-01-2024', '1.80'),
+    ];
     const result = fillForward(input);
     assert.equal(result[1]!.value, '1.75');
   });
@@ -206,10 +217,7 @@ describe('fillForward', () => {
 
   it('throws when the first observation has no valid value', () => {
     const input = [obs('01-01-2024', '', 'NO_OBS'), obs('02-01-2024', '1.75')];
-    assert.throws(
-      () => fillForward(input),
-      /first observation has no valid value.*trading day/i,
-    );
+    assert.throws(() => fillForward(input), /first observation has no valid value.*trading day/i);
   });
 
   it('uses the most recently seen valid value when gaps are interspersed', () => {
