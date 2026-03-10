@@ -2,6 +2,45 @@ import { parseObservationDate } from './dates.js';
 import type { Observation } from '../client/types.js';
 
 /**
+ * Fills forward gap observations using the last valid value seen.
+ *
+ * Each gap (empty or non-numeric `value`) is replaced with the `value` string
+ * of the most recent valid observation. The original `indexDateString` and
+ * `statusCode` of each observation are preserved.
+ *
+ * @param observations - Array of observations to fill.
+ * @returns A new array of the same length with gaps filled forward.
+ * @throws {Error} When the first observation has no valid value. Ensure the
+ *   start date falls on a trading day with an available observation.
+ *
+ * @example
+ * ```ts
+ * const filled = fillForward(data.observations);
+ * // Gap observations now carry the last known value forward
+ * ```
+ */
+export function fillForward(observations: Observation[]): Observation[] {
+  if (observations.length === 0) {
+    return [];
+  }
+
+  if (parseValue(observations[0]!.value) === null) {
+    throw new Error(
+      'fillForward: first observation has no valid value — ensure the start date falls on a trading day',
+    );
+  }
+
+  let lastValue = observations[0]!.value;
+  return observations.map((obs) => {
+    if (parseValue(obs.value) !== null) {
+      lastValue = obs.value;
+      return obs;
+    }
+    return { ...obs, value: lastValue };
+  });
+}
+
+/**
  * Parses a raw observation value string to a number, or `null` for gaps.
  *
  * @param value - Raw value string from an {@link Observation}.

@@ -17,6 +17,7 @@ export { SERIES } from './series/index.js';
 export {
   parseObservationDate,
   formatQueryDate,
+  fillForward,
   filterValid,
   parseValue,
   toArrays,

@@ -38,7 +38,7 @@ console.log(data.observations); // [{ indexDateString, value, statusCode }, ...]
 ### Transform observations
 
 ```ts
-import { toNumbers, toArrays, filterValid, mean, rollingMean } from 'bcchapi/utils';
+import { toNumbers, toArrays, filterValid, fillForward, mean, rollingMean } from 'bcchapi/utils';
 
 // Parse values to number | null (null for gaps)
 const values = toNumbers(data.observations); // [37000.12, null, 37050.45, ...]
@@ -48,6 +48,11 @@ const { dates, values } = toArrays(data.observations);
 
 // Filter out gap observations
 const valid = filterValid(data.observations);
+
+// Fill gaps by carrying the last valid value forward (e.g. weekends, holidays)
+// Throws if the first observation has no valid value — ensure the start date
+// falls on a trading day.
+const filled = fillForward(data.observations);
 
 // Summary statistics (gaps are ignored)
 const avg = mean(data.observations);
@@ -204,15 +209,16 @@ Use [si3.bcentral.cl](https://si3.bcentral.cl/siete) or `client.searchSeries()` 
 
 #### Transform functions
 
-| Function                           | Description                                                                 |
-| ---------------------------------- | --------------------------------------------------------------------------- |
-| `parseValue(value)`                | Parses a value string to `number \| null` (`null` for empty or non-numeric) |
-| `filterValid(observations)`        | Returns only observations with parseable numeric values                     |
-| `toNumbers(observations)`          | Maps observations to `Array<number \| null>`                                |
-| `toMap(observations)`              | Returns a `Map<string, number \| null>` keyed by `indexDateString`          |
-| `toArrays(observations)`           | Returns `{ dates: Date[], values: Array<number \| null> }`                  |
-| `parseObservationDate(dateString)` | Parses `"DD-MM-YYYY"` to a UTC `Date`                                       |
-| `formatQueryDate(date)`            | Formats a `Date` to `"YYYY-MM-DD"` for use in `getSeries` options           |
+| Function | Description |
+| --- | --- |
+| `parseValue(value)` | Parses a value string to `number \| null` (`null` for empty or non-numeric) |
+| `filterValid(observations)` | Returns only observations with parseable numeric values |
+| `toNumbers(observations)` | Maps observations to `Array<number \| null>` |
+| `toMap(observations)` | Returns a `Map<string, number \| null>` keyed by `indexDateString` |
+| `toArrays(observations)` | Returns `{ dates: Date[], values: Array<number \| null> }` |
+| `fillForward(observations)` | Fills gap observations by carrying the last valid value forward. Throws if the first observation has no valid value. |
+| `parseObservationDate(dateString)` | Parses `"DD-MM-YYYY"` to a UTC `Date` |
+| `formatQueryDate(date)` | Formats a `Date` to `"YYYY-MM-DD"` for use in `getSeries` options |
 
 #### Statistics functions
 
@@ -227,6 +233,16 @@ All stats functions operate on `Observation[]` and ignore gap values (empty or n
 | `periodVariation(observations)`                 | Period-over-period fractional change (`value[i] / value[i-1] - 1`)       |
 | `annualVariation(observations, periodsPerYear)` | Year-over-year fractional change (`value[i] / value[i - n] - 1`)         |
 | `rollingMean(observations, window)`             | Rolling mean over a fixed window; `null` if any value in window is a gap |
+
+## Terms of Use
+
+Use of the Banco Central de Chile API is subject to their [terms and conditions](https://si3.bcentral.cl/estadisticas/Principal1/Web_Services/index_BDE_TC.htm). Key points:
+
+- **Registration required** — you must register and accept the terms at [si3.bcentral.cl](https://si3.bcentral.cl/siete) to obtain credentials.
+- **Rate limit** — maximum 5 simultaneous requests per second per account. The API does not support bulk or parallel fetching.
+- **Attribution** — any application or publication that uses data from this API must credit **Banco Central de Chile** as the original source.
+
+This library does not redistribute any data. All data is fetched directly from the official API at runtime by the consuming application.
 
 ## Contributing
 

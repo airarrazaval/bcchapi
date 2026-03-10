@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
-import { filterValid, parseValue, toArrays, toMap, toNumbers } from '../../src/utils/index.ts';
+import { fillForward, filterValid, parseValue, toArrays, toMap, toNumbers } from '../../src/utils/index.ts';
 import type { Observation } from '../../src/client/index.ts';
 
 // ---------------------------------------------------------------------------
@@ -141,5 +141,86 @@ describe('toArrays', () => {
     const { dates, values } = toArrays([]);
     assert.equal(dates.length, 0);
     assert.equal(values.length, 0);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// fillForward
+// ---------------------------------------------------------------------------
+
+describe('fillForward', () => {
+  it('returns empty array for empty input', () => {
+    assert.deepEqual(fillForward([]), []);
+  });
+
+  it('returns same array when there are no gaps', () => {
+    const input = [obs('01-01-2024', '1.75'), obs('02-01-2024', '1.80')];
+    assert.deepEqual(fillForward(input), input);
+  });
+
+  it('fills a single gap with the previous valid value', () => {
+    const input = [obs('01-01-2024', '1.75'), obs('02-01-2024', '', 'NO_OBS'), obs('03-01-2024', '1.80')];
+    const result = fillForward(input);
+    assert.equal(result[1]!.value, '1.75');
+  });
+
+  it('fills multiple consecutive gaps with the last valid value', () => {
+    const input = [
+      obs('01-01-2024', '1.75'),
+      obs('02-01-2024', '', 'NO_OBS'),
+      obs('03-01-2024', '', 'NO_OBS'),
+      obs('04-01-2024', '1.80'),
+    ];
+    const result = fillForward(input);
+    assert.equal(result[1]!.value, '1.75');
+    assert.equal(result[2]!.value, '1.75');
+  });
+
+  it('fills trailing gaps after the last valid observation', () => {
+    const input = [obs('01-01-2024', '1.75'), obs('02-01-2024', '', 'NO_OBS')];
+    const result = fillForward(input);
+    assert.equal(result[1]!.value, '1.75');
+  });
+
+  it('preserves the gap observation indexDateString', () => {
+    const input = [obs('01-01-2024', '1.75'), obs('02-01-2024', '', 'NO_OBS')];
+    const result = fillForward(input);
+    assert.equal(result[1]!.indexDateString, '02-01-2024');
+  });
+
+  it('preserves the gap observation original statusCode', () => {
+    const input = [obs('01-01-2024', '1.75'), obs('02-01-2024', '', 'NO_OBS')];
+    const result = fillForward(input);
+    assert.equal(result[1]!.statusCode, 'NO_OBS');
+  });
+
+  it('does not mutate the input array', () => {
+    const input = [obs('01-01-2024', '1.75'), obs('02-01-2024', '', 'NO_OBS')];
+    fillForward(input);
+    assert.equal(input[1]!.value, '');
+  });
+
+  it('returns an array of the same length as input', () => {
+    assert.equal(fillForward(OBSERVATIONS).length, OBSERVATIONS.length);
+  });
+
+  it('throws when the first observation has no valid value', () => {
+    const input = [obs('01-01-2024', '', 'NO_OBS'), obs('02-01-2024', '1.75')];
+    assert.throws(
+      () => fillForward(input),
+      /first observation has no valid value.*trading day/i,
+    );
+  });
+
+  it('uses the most recently seen valid value when gaps are interspersed', () => {
+    const input = [
+      obs('01-01-2024', '1.00'),
+      obs('02-01-2024', '', 'NO_OBS'),
+      obs('03-01-2024', '2.00'),
+      obs('04-01-2024', '', 'NO_OBS'),
+    ];
+    const result = fillForward(input);
+    assert.equal(result[1]!.value, '1.00');
+    assert.equal(result[3]!.value, '2.00');
   });
 });
