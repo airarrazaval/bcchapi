@@ -6,6 +6,23 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ---
 
+## [2.2.0] - 2026-03-10
+
+
+### Added
+
+- Add fillForward utility
+
+
+### Changed
+
+- Always run format before check in dev workflow
+- Fix formatting
+- Add check script and move release docs to CONTRIBUTING.md
+- Update README for v2.1.0 caching and fix AGENTS.md checklists
+
+
+---
 ## [2.1.0] - 2026-03-10
 
 
@@ -16,6 +33,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ### Changed
 
+- Bump version to 2.1.0
+- Release v2.1.0
 - Fix formatting
 
 
