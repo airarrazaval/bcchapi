@@ -10,8 +10,8 @@
  *
  * @example
  * ```ts
- * import { Client } from 'bcch/client';
- * import { SERIES } from 'bcch/series';
+ * import { Client } from 'bcchapi/client';
+ * import { SERIES } from 'bcchapi/series';
  *
  * const client = new Client({ user: '...', pass: '...' });
  * const data = await client.getSeries(SERIES.PRICES.UF);
