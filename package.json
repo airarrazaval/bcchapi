@@ -68,7 +68,7 @@
     "build": "tsc -p tsconfig.build.json",
     "dev": "node --import tsx/esm --test --watch \"tests/**/*.test.ts\"",
     "test": "node --import tsx/esm --test \"tests/**/*.test.ts\"",
-    "test:coverage": "node --test-coverage --import tsx/esm --test \"tests/**/*.test.ts\"",
+    "test:coverage": "node --experimental-test-coverage --import tsx/esm --test \"tests/**/*.test.ts\"",
     "typecheck": "tsc --noEmit",
     "lint": "oxlint src tests",
     "lint:fix": "oxlint --fix src tests",
