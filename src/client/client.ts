@@ -53,7 +53,7 @@ interface RawSearchSeriesResponse {
  *
  * @example
  * ```ts
- * import { Client } from 'bcch/client';
+ * import { Client } from 'bcchapi/client';
  *
  * const client = new Client({ user: 'me@example.com', pass: 'secret' });
  * const data = await client.getSeries('F022.TPM.TIN.D001.NO.Z.D', {
@@ -100,7 +100,7 @@ export class Client {
     const cacheKey = `getSeries:${seriesId}:${options?.firstdate ?? ''}:${options?.lastdate ?? ''}`;
 
     if (this.cache !== undefined) {
-      const cached = this.cache.get(cacheKey);
+      const cached = await this.cache.get(cacheKey);
       if (cached !== undefined) {
         return cached as SeriesData;
       }
@@ -135,7 +135,7 @@ export class Client {
       observations,
     };
 
-    this.cache?.set(cacheKey, result, this.cacheTtlMs);
+    await this.cache?.set(cacheKey, result, this.cacheTtlMs);
     return result;
   }
 
@@ -158,7 +158,7 @@ export class Client {
     const cacheKey = `searchSeries:${frequency}`;
 
     if (this.cache !== undefined) {
-      const cached = this.cache.get(cacheKey);
+      const cached = await this.cache.get(cacheKey);
       if (cached !== undefined) {
         return cached as SeriesInfo[];
       }
@@ -185,7 +185,7 @@ export class Client {
       createdAt: info.createdAt,
     }));
 
-    this.cache?.set(cacheKey, result, this.cacheTtlMs);
+    await this.cache?.set(cacheKey, result, this.cacheTtlMs);
     return result;
   }
 

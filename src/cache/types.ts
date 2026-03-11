@@ -1,8 +1,10 @@
 /**
  * A minimal cache interface for storing and retrieving API responses.
  *
- * Implement this interface to plug in any caching backend (in-memory, Redis,
- * SQLite, etc.) into {@link https://github.com/airarrazaval/bcchapi | Client}.
+ * Methods may return values or promises, allowing both synchronous (in-memory)
+ * and asynchronous (Redis, SQLite, HTTP) implementations. The
+ * {@link https://github.com/airarrazaval/bcchapi | Client} always `await`s
+ * cache calls, so synchronous implementations work without wrapping.
  *
  * @example
  * ```ts
@@ -20,6 +22,9 @@
  *     const opts = ttlMs !== undefined ? { PX: ttlMs } : {};
  *     await redis.set(key, JSON.stringify(value), opts);
  *   },
+ *   clear: async () => {
+ *     await redis.flushDb();
+ *   },
  * };
  * ```
  */
@@ -30,7 +35,7 @@ export interface Cache {
    * @param key - Cache key.
    * @returns The stored value, or `undefined` if the key is absent or expired.
    */
-  get(key: string): unknown;
+  get(key: string): unknown | Promise<unknown>;
 
   /**
    * Stores `value` under `key` with an optional time-to-live.
@@ -40,5 +45,12 @@ export interface Cache {
    * @param ttlMs - Optional time-to-live in milliseconds. Implementations may
    *   ignore this if TTL is managed externally (e.g. Redis `EXPIRE`).
    */
-  set(key: string, value: unknown, ttlMs?: number): void;
+  set(key: string, value: unknown, ttlMs?: number): void | Promise<void>;
+
+  /**
+   * Removes all entries from the cache.
+   *
+   * Implementations should evict every stored key, regardless of TTL.
+   */
+  clear(): void | Promise<void>;
 }

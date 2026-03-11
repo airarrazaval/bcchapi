@@ -96,16 +96,19 @@ const client = new Client({
 const data = await client.getSeries(SERIES.PRICES.UF);
 ```
 
-Bring your own backend by implementing the `Cache` interface:
+Bring your own backend by implementing the `Cache` interface. Methods may return values or promises, so both synchronous and asynchronous backends are supported:
 
 ```ts
 import type { Cache } from 'bcchapi/cache';
 
 const redisCache: Cache = {
-  get: (key) => {
+  get: async (key) => {
     /* ... */
   },
-  set: (key, value, ttlMs) => {
+  set: async (key, value, ttlMs) => {
+    /* ... */
+  },
+  clear: async () => {
     /* ... */
   },
 };
@@ -170,12 +173,13 @@ Returns `Promise<SeriesInfo[]>`.
 
 #### `Cache` interface
 
-Minimal interface for plugging in any cache backend:
+Minimal interface for plugging in any cache backend. Methods may return values or promises:
 
 ```ts
 interface Cache {
-  get(key: string): unknown;
-  set(key: string, value: unknown, ttlMs?: number): void;
+  get(key: string): unknown | Promise<unknown>;
+  set(key: string, value: unknown, ttlMs?: number): void | Promise<void>;
+  clear(): void | Promise<void>;
 }
 ```
 
