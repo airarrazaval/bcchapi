@@ -1,12 +1,9 @@
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
   "plugins": ["eslint", "typescript", "unicorn", "oxc", "import"],
-  "globals": {
-    "URL": "readonly",
-    "URLSearchParams": "readonly",
-    "Response": "readonly",
-    "fetch": "readonly",
-    "setTimeout": "readonly"
+  "env": {
+    "es2024": true,
+    "node": true
   },
   "categories": {
     "correctness": "error",
