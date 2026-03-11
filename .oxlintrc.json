@@ -7,10 +7,16 @@
     "fetch": "readonly",
     "setTimeout": "readonly"
   },
+  "categories": {
+    "correctness": "error",
+    "suspicious": "error",
+    "perf": "warn"
+  },
   "rules": {
     "no-console": "warn",
     "no-debugger": "error",
     "no-unused-vars": "error",
-    "no-undef": "error"
+    "no-undef": "error",
+    "typescript/no-explicit-any": "error"
   }
 }
