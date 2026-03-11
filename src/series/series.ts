@@ -2,7 +2,10 @@
  * Curated constants for commonly used BCCH series identifiers.
  *
  * This is not an exhaustive catalog — it covers the most frequently queried
- * series across key macroeconomic domains. Use {@link https://si3.bcentral.cl/siete | si3.bcentral.cl}
+ * series across key macroeconomic domains. The complete list of over 22,000
+ * series is available as a downloadable spreadsheet from the
+ * {@link https://si3.bcentral.cl/estadisticas/Principal1/Web_Services/Webservices/series.xlsx | BCCH series catalog (xlsx)}.
+ * You can also use {@link https://si3.bcentral.cl/siete | si3.bcentral.cl}
  * or {@link Client.searchSeries} to discover additional series IDs.
  *
  * @example

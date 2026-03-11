@@ -706,7 +706,7 @@ Quick-reference checklist. Full rules for each step are in the sections above.
 - [ ] **Green** — write minimum `src/` code to pass tests; use `npm run dev` for watch mode
 - [ ] **Refactor** — clean up with tests staying green; run `npm test`
 - [ ] **Validate** — `npm run format && npm run check`; fix any remaining issues with `npm run lint:fix`
-- [ ] **Commit** — `git commit -m "feat: description"` (→ [Commits](#commits))
+- [ ] **Commit** — stage `package-lock.json` too if any dependency changed (`npm install` must be re-run after editing `package.json`); then `git commit -m "feat: description"` (→ [Commits](#commits))
 - [ ] Repeat **Red → Green → Refactor → Validate → Commit** for each requirement
 
 ### Pull Request
@@ -726,7 +726,7 @@ Quick-reference checklist. Full rules for each step are in the sections above.
 - [ ] `git checkout main && git pull`
 - [ ] Review `README.md` — ensure it reflects all new or changed public API introduced since the last release
 - [ ] `npm run changelog` — regenerates `CHANGELOG.md` from commits; review the output (→ [Updating the Changelog](#updating-the-changelog))
-- [ ] `git add README.md CHANGELOG.md && git commit -m "chore: release vX.Y.Z"` (use the version printed by git-cliff)
+- [ ] `git add README.md CHANGELOG.md && git commit -m "chore: release vX.Y.Z"` (use the version printed by git-cliff; also stage `package-lock.json` if any dependency was updated since the last release)
 - [ ] `npm version patch` (or `minor` / `major` — must match the version git-cliff determined)
 - [ ] `npm pack --dry-run` — verify published contents (→ [Verifying Package Contents](#verifying-package-contents))
 - [ ] `git push --follow-tags` — the `publish` workflow triggers automatically; do not run `npm publish` manually

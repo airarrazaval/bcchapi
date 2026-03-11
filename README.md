@@ -203,7 +203,7 @@ Built-in in-memory cache. Entries are evicted lazily on `get` — no background 
 | `SERIES.PUBLIC_FINANCES`   | Government revenue, expenditure, fiscal balance      |
 | `SERIES.CAPITAL_MARKET`    | IPSA, stock market capitalisation                    |
 
-Use [si3.bcentral.cl](https://si3.bcentral.cl/siete) or `client.searchSeries()` to discover additional series IDs beyond the curated set.
+The curated set covers the most frequently queried series. The complete catalog of over 22,000 series is available as a [downloadable spreadsheet](https://si3.bcentral.cl/estadisticas/Principal1/Web_Services/Webservices/series.xlsx) from the BCCH. You can also use [si3.bcentral.cl](https://si3.bcentral.cl/siete) or `client.searchSeries()` to browse and discover additional series IDs.
 
 ### `bcchapi/utils`
 
