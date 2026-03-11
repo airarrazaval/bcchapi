@@ -647,8 +647,10 @@ npm version patch   # or minor / major
 Only files listed in `"files"` in `package.json` are published:
 
 ```json
-"files": ["dist", "README.md", "CHANGELOG.md", "LICENSE"]
+"files": ["dist", "src", "README.md", "CHANGELOG.md", "LICENSE"]
 ```
+
+`src/` is included so that declaration maps (`.d.ts.map`) resolve to the original TypeScript source, enabling "Go to Definition" in consumers' IDEs.
 
 Verify before publishing:
 
@@ -659,7 +661,7 @@ npm pack --dry-run
 Check that:
 
 - `dist/` contains `.js`, `.d.ts`, `.d.ts.map`, and `.js.map` files
-- No `.ts` source files, test files, or config files are included
+- `src/` contains only `.ts` source files (no test files or config files)
 - `README.md` and `CHANGELOG.md` are present
 
 ### Updating the Changelog
