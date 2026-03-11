@@ -32,7 +32,8 @@ export function fillForward(observations: Observation[]): Observation[] {
 
   let lastValue = observations[0]!.value;
   return observations.map((obs) => {
-    if (parseValue(obs.value) !== null) {
+    const parsed = parseValue(obs.value);
+    if (parsed !== null) {
       lastValue = obs.value;
       return obs;
     }
