@@ -6,6 +6,15 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ---
 
+## [3.0.1] - 2026-03-11
+
+
+### Changed
+
+- Include src/ in published files for declaration map support
+
+
+---
 ## [3.0.0] - 2026-03-11
 
 ### Added
@@ -14,6 +23,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ### Changed
 
+- Release v3.0.0
 - Remove redundant checks in dates and transform
 
 ### Fixed
