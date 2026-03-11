@@ -6,11 +6,21 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ---
 
+## [2.2.3] - 2026-03-11
+
+
+### Changed
+
+- Upgrade typescript to 5.9.3 and document series catalog
+
+
+---
 ## [2.2.2] - 2026-03-10
 
 
 ### Changed
 
+- Release v2.2.2
 - Fix formatting
 - Move ApiError and HttpError to errors.ts
 
