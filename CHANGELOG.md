@@ -6,11 +6,29 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ---
 
+## [3.0.0] - 2026-03-11
+
+### Added
+
+- **BREAKING:** Make Cache interface async-compatible and add `clear()` method
+
+### Changed
+
+- Remove redundant checks in dates and transform
+
+### Fixed
+
+- Replace spread with loop in min/max to avoid stack overflow on large datasets
+- Standardize JSDoc import paths to bcchapi
+
+
+---
 ## [2.2.3] - 2026-03-11
 
 
 ### Changed
 
+- Release v2.2.3
 - Upgrade typescript to 5.9.3 and document series catalog
 
 
