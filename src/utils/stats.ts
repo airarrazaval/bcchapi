@@ -74,7 +74,11 @@ export function min(observations: Observation[]): number {
   if (values.length === 0) {
     throw new Error('No valid observations to compute min');
   }
-  return Math.min(...values);
+  let result = values[0]!;
+  for (let i = 1; i < values.length; i++) {
+    if (values[i]! < result) result = values[i]!;
+  }
+  return result;
 }
 
 /**
@@ -94,7 +98,11 @@ export function max(observations: Observation[]): number {
   if (values.length === 0) {
     throw new Error('No valid observations to compute max');
   }
-  return Math.max(...values);
+  let result = values[0]!;
+  for (let i = 1; i < values.length; i++) {
+    if (values[i]! > result) result = values[i]!;
+  }
+  return result;
 }
 
 /**

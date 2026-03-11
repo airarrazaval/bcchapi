@@ -33,9 +33,6 @@ export function parseObservationDate(dateString: string): Date {
     !Number.isInteger(day) ||
     !Number.isInteger(month) ||
     !Number.isInteger(year) ||
-    isNaN(day) ||
-    isNaN(month) ||
-    isNaN(year) ||
     month < 1 ||
     month > 12 ||
     day < 1 ||

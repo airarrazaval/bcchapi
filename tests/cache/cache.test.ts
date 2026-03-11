@@ -8,6 +8,7 @@ describe('Cache interface', () => {
     const cache: Cache = new MemoryCache();
     assert.ok(typeof cache.get === 'function');
     assert.ok(typeof cache.set === 'function');
+    assert.ok(typeof cache.clear === 'function');
   });
 });
 
@@ -91,6 +92,25 @@ describe('MemoryCache', () => {
       const cache = new MemoryCache();
       cache.set('key', 'value');
       assert.equal(cache.get('key'), 'value');
+    });
+  });
+
+  describe('clear', () => {
+    it('removes all entries', () => {
+      const cache = new MemoryCache();
+      cache.set('a', 1);
+      cache.set('b', 2);
+      cache.clear();
+      assert.equal(cache.get('a'), undefined);
+      assert.equal(cache.get('b'), undefined);
+    });
+
+    it('allows new entries after clearing', () => {
+      const cache = new MemoryCache();
+      cache.set('key', 'old');
+      cache.clear();
+      cache.set('key', 'new');
+      assert.equal(cache.get('key'), 'new');
     });
   });
 });

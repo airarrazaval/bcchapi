@@ -64,4 +64,8 @@ export class MemoryCache implements Cache {
     const expiresAt = effectiveTtl !== undefined ? Date.now() + effectiveTtl : null;
     this.store.set(key, { value, expiresAt });
   }
+
+  clear(): void {
+    this.store.clear();
+  }
 }
