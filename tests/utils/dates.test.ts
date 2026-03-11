@@ -39,6 +39,11 @@ describe('parseObservationDate', () => {
     assert.throws(() => parseObservationDate('2023-06-15'), /invalid date/i);
   });
 
+  it('throws when there are not exactly three parts', () => {
+    assert.throws(() => parseObservationDate('15-06'), /invalid date/i);
+    assert.throws(() => parseObservationDate('15-06-2023-extra'), /invalid date/i);
+  });
+
   it('throws when the date parts are out of range', () => {
     assert.throws(() => parseObservationDate('99-99-2023'), /invalid date/i);
   });
