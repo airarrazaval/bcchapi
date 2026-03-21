@@ -28,7 +28,7 @@ dist/                   # compiled output — generated, not committed
 docs/                   # generated API docs — not committed
 ```
 
-Each `src/` subdirectory is a subpath export (`bcchapi/client`, `bcchapi/series`, `bcchapi/utils`, `bcchapi/cache`). The dependency direction is: `client` → `cache`, `client` → `series` (for types only). `utils` and `series` are standalone with no internal dependencies.
+Each `src/` subdirectory is a subpath export (`bcchapi/client`, `bcchapi/series`, `bcchapi/utils`, `bcchapi/cache`). The dependency direction is: `client` → `cache` (for types), `utils` → `client` (for the `Observation` type only). `series` and `cache` are standalone with no cross-module dependencies.
 
 - `src/` contains library code only. Never import `node:test` or test utilities from `src/`.
 - `tests/` mirrors the `src/` structure. One test file per source file.
@@ -369,9 +369,9 @@ Runs on every pull request targeting `main` and on every push to `main`.
 | ----------------------- | ---------------------- |
 | Verify signatures       | `npm audit signatures` |
 | Audit prod dependencies | `npm audit --omit=dev` |
+| Format check            | `npm run format:check` |
 | Type-check              | `npm run typecheck`    |
 | Lint                    | `npm run lint`         |
-| Format check            | `npm run format:check` |
 | Test                    | `npm test`             |
 | Build                   | `npm run build`        |
 
@@ -402,10 +402,9 @@ The workflow runs `npm publish --provenance`, which:
 
 The `prepublishOnly` script runs automatically on `npm publish` and enforces:
 
-1. `npm run typecheck` — no type errors
-2. `npm run lint` — no lint violations
-3. `npm run clean` — removes stale `dist/` and `docs/`
-4. `npm run build` — fresh compilation
+1. `npm run check` — format, typecheck, lint, and test
+2. `npm run clean` — removes stale `dist/` and `docs/`
+3. `npm run build` — fresh compilation
 
 Never bypass it with `npm publish --ignore-scripts`.
 
