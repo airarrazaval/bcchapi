@@ -1,5 +1,9 @@
 # bcchapi
 
+[![npm version](https://img.shields.io/npm/v/bcchapi)](https://www.npmjs.com/package/bcchapi)
+[![CI](https://github.com/airarrazaval/bcchapi/actions/workflows/ci.yml/badge.svg)](https://github.com/airarrazaval/bcchapi/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
 Node.js wrapper for the [Banco Central de Chile REST API](https://si3.bcentral.cl/siete). Features a fully typed HTTP client, curated series ID constants, and utility functions for transforming and analysing macroeconomic observations.
 
 ## Requirements
@@ -247,6 +251,10 @@ Use of the Banco Central de Chile API is subject to their [terms and conditions]
 - **Attribution** — any application or publication that uses data from this API must credit **Banco Central de Chile** as the original source.
 
 This library does not redistribute any data. All data is fetched directly from the official API at runtime by the consuming application.
+
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md).
 
 ## Contributing
 
