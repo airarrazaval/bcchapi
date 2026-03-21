@@ -32,9 +32,7 @@ split_commits = false
 
 # Normalize "type!(scope):" → "type(scope)!:" so the conventional commit parser
 # recognises scoped breaking changes (git-cliff cannot parse the former syntax).
-commit_preprocessors = [
-  { pattern = "^(\\w+)!\\(([^)]+)\\):", replace = "${1}(${2})!:" },
-]
+commit_preprocessors = [{ pattern = "^(\\w+)!\\(([^)]+)\\):", replace = "${1}(${2})!:" }]
 
 commit_parsers = [
   { message = "^feat", group = "Added" },
