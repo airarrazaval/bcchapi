@@ -74,7 +74,7 @@
     "lint:fix": "oxlint --fix src tests",
     "format": "oxfmt",
     "format:check": "oxfmt --check",
-    "check": "npm run typecheck && npm run lint && npm test",
+    "check": "npm run format:check && npm run typecheck && npm run lint && npm test",
     "clean": "rm -rf dist docs",
     "docs": "typedoc",
     "changelog": "git-cliff --bump -o CHANGELOG.md",

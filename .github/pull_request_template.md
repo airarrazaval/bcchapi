@@ -14,7 +14,8 @@
 ## Checklist
 
 - [ ] Tests added or updated
-- [ ] `CHANGELOG.md` updated under `[Unreleased]`
+- [ ] `npm run changelog` reviewed (do not edit `CHANGELOG.md` by hand)
+- [ ] `npm run format:check` passes
 - [ ] `npm run typecheck` passes
 - [ ] `npm run lint` passes
 - [ ] `npm test` passes

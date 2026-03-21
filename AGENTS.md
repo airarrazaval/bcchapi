@@ -61,7 +61,7 @@ npm run dev            # run tests in watch mode (use during development)
 npm run build          # compile src/ → dist/
 npm run typecheck      # type-check without emitting
 npm test               # run tests
-npm run check          # typecheck + lint + test (run before committing)
+npm run check          # format + typecheck + lint + test (run before committing)
 npm run test:coverage  # run tests with coverage
 npm run lint           # lint src/ and tests/
 npm run lint:fix       # lint and auto-fix
@@ -72,7 +72,7 @@ npm run clean          # remove dist/ and docs/
 npm run changelog      # regenerate CHANGELOG.md from commits (run before releasing)
 ```
 
-Always run `npm run format && npm run check` after making changes.
+Always run `npm run format` then `npm run check` after making changes.
 
 ---
 
