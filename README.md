@@ -2,6 +2,8 @@
 
 [![npm version](https://img.shields.io/npm/v/bcchapi)](https://www.npmjs.com/package/bcchapi)
 [![CI](https://github.com/airarrazaval/bcchapi/actions/workflows/ci.yml/badge.svg)](https://github.com/airarrazaval/bcchapi/actions/workflows/ci.yml)
+[![node](https://img.shields.io/node/v/bcchapi)](https://nodejs.org)
+[![npm provenance](https://img.shields.io/badge/provenance-verified-brightgreen)](https://docs.npmjs.com/generating-provenance-statements)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 Node.js wrapper for the [Banco Central de Chile REST API](https://si3.bcentral.cl/siete). Features a fully typed HTTP client, curated series ID constants, and utility functions for transforming and analysing macroeconomic observations.
