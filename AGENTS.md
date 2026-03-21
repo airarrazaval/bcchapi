@@ -11,17 +11,24 @@ A Node.js library template. ESM-only, targets Node.js >=24. TypeScript is the on
 ## File Structure
 
 ```text
-src/index.ts          # library entry point — all public exports live here
-tests/index.test.ts   # tests mirror the src/ structure
-tsconfig.json         # type-checking config (covers src/ + tests/, noEmit: true)
-tsconfig.build.json   # build config (src/ only, emits to dist/)
-typedoc.json          # TypeDoc config (generates docs/)
-cliff.toml            # git-cliff config (changelog generation from Conventional Commits)
-.oxlintrc.json        # oxlint rules config
-.oxfmtrc.json         # oxfmt formatting config (printWidth, tabWidth, quotes, etc.)
-dist/                 # compiled output — generated, not committed
-docs/                 # generated API docs — not committed
+src/
+  index.ts              # library entry point — re-exports all public symbols
+  client/               # HTTP client, error types, API response types
+  series/               # curated BCCH series ID constants
+  utils/                # observation transforms (toNumbers, fillForward, …) and stats (mean, stdDev, …)
+  cache/                # Cache interface and MemoryCache implementation
+tests/                  # mirrors src/ — one test file per source file
+tsconfig.json           # type-checking config (covers src/ + tests/, noEmit: true)
+tsconfig.build.json     # build config (src/ only, emits to dist/)
+typedoc.json            # TypeDoc config (generates docs/)
+cliff.toml              # git-cliff config (changelog generation from Conventional Commits)
+.oxlintrc.json          # oxlint rules config
+.oxfmtrc.json           # oxfmt formatting config (printWidth, tabWidth, quotes, etc.)
+dist/                   # compiled output — generated, not committed
+docs/                   # generated API docs — not committed
 ```
+
+Each `src/` subdirectory is a subpath export (`bcchapi/client`, `bcchapi/series`, `bcchapi/utils`, `bcchapi/cache`). The dependency direction is: `client` → `cache`, `client` → `series` (for types only). `utils` and `series` are standalone with no internal dependencies.
 
 - `src/` contains library code only. Never import `node:test` or test utilities from `src/`.
 - `tests/` mirrors the `src/` structure. One test file per source file.
@@ -78,6 +85,8 @@ Always run `npm run format` then `npm run check` after making changes.
 
 ## TypeScript Style ([ts.dev/style](https://ts.dev/style))
 
+Follow [ts.dev/style](https://ts.dev/style). Most rules (no `var`, strict equality, no `any`, etc.) are enforced by oxlint — violations will fail CI. The conventions below are **not caught by tooling** and must be followed manually.
+
 ### Naming
 
 | Symbol                                                | Convention       |
@@ -86,51 +95,9 @@ Always run `npm run format` then `npm run check` after making changes.
 | Variables, parameters, functions, methods, properties | `lowerCamelCase` |
 | Global constants, enum values                         | `CONSTANT_CASE`  |
 | Files                                                 | `kebab-case`     |
-| Namespace imports                                     | `lowerCamelCase` |
 
 - Treat abbreviations as whole words: `loadHttpUrl`, not `loadHTTPURL`
 - Never use `_` as a prefix, suffix, or standalone identifier — exception: prefix unused parameters required by an interface or callback signature with `_` (e.g., `_event: MouseEvent`)
-
-### Variables and Functions
-
-```ts
-// prefer const; use let only when reassignment is needed
-const items = getItems();
-let count = 0;
-
-// use function declarations for named functions
-function processItem(item: Item): Result { ... }
-
-// use arrow functions for callbacks
-const filtered = items.filter(item => item.active);
-```
-
-- Never use `var`
-- Use `===` and `!==`; only use `==`/`!=` when comparing to literal `null`
-- Always throw with `new Error('message')`, never bare `throw Error()`
-- Use `for...of` instead of `forEach` (preserves compiler reachability checks)
-- Never use `for...in` on arrays; avoid unfiltered `for...in` on objects
-
-### Types
-
-- Prefer interfaces for object type declarations; use type aliases for unions, tuples, and primitives
-- Use `T[]` for simple types, `Array<T>` for complex expressions
-- Use `unknown` instead of `any`; narrow with type guards before use
-- Omit type annotations for trivially inferred types (`string`, `number`, `boolean`, literal values)
-- Nullable fields: add `| null` or `| undefined` at the point of use, not inside type aliases
-- Prefer optional syntax (`?`) over `| undefined` on parameters and fields
-
-```ts
-// interfaces for object shapes
-interface Config {
-  host: string;
-  port: number;
-  timeout?: number;
-}
-
-// type aliases for unions and tuples
-type Result<T> = { ok: true; value: T } | { ok: false; error: Error };
-```
 
 ### Imports and Exports
 
@@ -139,8 +106,6 @@ type Result<T> = { ok: true; value: T } | { ok: false; error: Error };
 - Use `import type` for type-only imports — required by `verbatimModuleSyntax`
 - Use `export type` when re-exporting types — required by `verbatimModuleSyntax`
 - Prefer relative imports (`./foo`) within the project
-- Do not use `require()`; use ES module `import`/`export` syntax
-- Do not use `namespace Foo { ... }`
 
 ```ts
 import { readFile } from 'node:fs/promises';
@@ -150,126 +115,36 @@ export function doThing(): void { ... }
 export type { Config };
 ```
 
+### Types
+
+- Prefer interfaces for object shapes; use type aliases for unions, tuples, and primitives
+- Use `unknown` instead of `any`; narrow with type guards before use
+- Omit type annotations for trivially inferred types
+
 ### Classes
 
-- Never use `public` modifier except for non-readonly public parameter properties
-- Mark properties never reassigned outside the constructor as `readonly`
-- Prefer parameter properties to reduce boilerplate
-- Avoid getters/setters unless logic is non-trivial
 - Do not use private fields (`#ident`); use TypeScript `private` keyword instead
-
-### Miscellaneous
-
-- Do not use `const enum`; use `enum`
-- Always use `new Foo()` with parentheses
-- Use `as Type` syntax for type assertions, never angle brackets
-- Annotate object literals with `: Foo` rather than `as Foo`
-- Multi-line control flow statements must use blocks `{ }`
-- `switch` statements must have a `default` case
-- Do not use `@ts-ignore`
+- Prefer parameter properties to reduce boilerplate
+- Mark properties never reassigned outside the constructor as `readonly`
 
 ---
 
 ## Documentation (TSDoc + TypeDoc)
 
-API documentation is generated from source comments using [TypeDoc](https://typedoc.org), which reads [TSDoc](https://tsdoc.org)-formatted comments. Generated output goes to `docs/` and is not committed.
-
-```sh
-npm run docs   # generates docs/
-```
-
-### What to Document
-
-Document every exported symbol — functions, classes, interfaces, type aliases, and enums. Do not document unexported symbols.
-
-### TSDoc Comment Format
-
-Use `/** ... */` blocks. Single-line `//` comments are for implementation notes and do not appear in generated docs.
-
-````ts
-/**
- * Brief one-sentence summary of what this does.
- *
- * Optional longer description if the behaviour is non-obvious.
- *
- * @param name - Description of the parameter.
- * @param options - Description of the options object.
- * @returns Description of the return value.
- * @throws {Error} When and why this throws.
- *
- * @example
- * ```ts
- * const result = myFunction('input');
- * // result === 'expected'
- * ```
- */
-export function myFunction(name: string, options?: Options): string { ... }
-````
-
-### TSDoc Tags Reference
-
-| Tag                   | Use                                                                      |
-| --------------------- | ------------------------------------------------------------------------ |
-| `@param name -`       | Describe a parameter. The dash after the name is required by TSDoc spec. |
-| `@returns`            | Describe the return value. Omit for `void` functions.                    |
-| `@throws {ErrorType}` | Document thrown errors and when they occur. TypeDoc-compatible syntax.   |
-| `@example`            | Usage example. Always use a fenced ` ```ts ``` ` block.                  |
-| `@remarks`            | Extended discussion, separate from the summary line.                     |
-| `@see`                | Link to related symbols: `@see {@link OtherFunction}`                    |
-| `@deprecated`         | Mark a symbol as deprecated with a migration note.                       |
-| `@internal`           | Exclude from generated docs (`excludeInternal: true` in `typedoc.json`). |
-| `@alpha` / `@beta`    | Mark stability level for unstable APIs.                                  |
-| `@defaultValue`       | Document the default value of an optional property.                      |
+API documentation is generated from source comments using [TypeDoc](https://typedoc.org) + [TSDoc](https://tsdoc.org). Output goes to `docs/` (not committed). Run `npm run docs` to generate.
 
 ### Rules
 
-- **Summary line first** — one sentence only; the rest goes in `@remarks` or a blank-line paragraph.
-- **Do not repeat the type** — TypeDoc reads types from TypeScript declarations. Never write `@param {string} name`.
-- **Always include `@example`** for public functions.
-- **Document all thrown errors** with `@throws`.
-- **Use `{@link Symbol}`** for cross-references between documented symbols.
-- **Do not use `@override`** — not part of the TSDoc spec.
-
-### Interfaces and Types
-
-Document the interface itself and each property:
-
-```ts
-/**
- * Configuration options for the HTTP client.
- */
-export interface ClientOptions {
-  /** Base URL for all requests. Must include the scheme (`https://`). */
-  baseUrl: string;
-
-  /**
-   * Request timeout in milliseconds.
-   *
-   * @defaultValue `5000`
-   */
-  timeout?: number;
-}
-```
-
-### Deprecation
-
-Mark deprecated symbols before removing them in the next major version:
-
-```ts
-/**
- * @deprecated Use {@link newFunction} instead. Will be removed in v2.0.
- */
-export function oldFunction(): void { ... }
-```
-
-### `@internal` for Non-Public Exports
-
-If a symbol must be exported for technical reasons but is not part of the public API, mark it `@internal`. TypeDoc will exclude it:
-
-```ts
-/** @internal */
-export function helperUsedByBuild(): void { ... }
-```
+- Document every exported symbol; do not document unexported symbols
+- Use `/** ... */` blocks — single-line `//` comments do not appear in generated docs
+- **Summary line first** — one sentence only; use `@remarks` for extended discussion
+- **Do not repeat the type** — TypeDoc reads types from declarations. Never write `@param {string} name`
+- **Always include `@example`** (fenced ` ```ts ``` ` block) for public functions
+- **Document all thrown errors** with `@throws {ErrorType}`
+- **Use `{@link Symbol}`** for cross-references
+- Document each property of exported interfaces
+- Use `@deprecated` with a migration note before removing symbols
+- Use `@internal` for symbols exported for technical reasons but not part of the public API
 
 ---
 
@@ -295,27 +170,12 @@ Always check for a Node.js built-in before reaching for an external package. Thi
 
 **Adding a dependency requires explicit justification.** If a built-in covers the use case, use it.
 
-### Async Patterns
+### Async and Error Patterns
 
 - Prefer `async`/`await` over raw `.then()`/`.catch()` chains
 - Use `node:fs/promises` and `node:stream/promises` over callback-based APIs
-- Handle errors with `try/catch` in async functions
-
-```ts
-async function readConfig(path: string): Promise<Config> {
-  const text = await readFile(path, 'utf8');
-  return JSON.parse(text) as Config;
-}
-```
-
-### Error Handling
-
 - Always throw `Error` instances, not strings or plain objects
-- Use `cause` to chain errors and preserve context:
-
-```ts
-throw new Error('Failed to read config', { cause: err });
-```
+- Use `cause` to chain errors: `throw new Error('msg', { cause: err })`
 
 ### ESM and Module Extensions
 
@@ -394,91 +254,14 @@ describe('myFunction', () => {
 
 ### Mocking
 
-When the library calls an external service (HTTP API, database, file system), tests must not perform real network calls or side effects. Use mocks to isolate the unit under test.
+Tests must not perform real network calls or side effects. See existing tests in `tests/client/` for patterns used in this project.
 
-#### Prefer Dependency Injection
-
-Design functions to accept dependencies as parameters. This is the most testable pattern and avoids monkey-patching globals.
-
-```ts
-// src/api_client.ts
-export interface HttpClient {
-  get(url: string): Promise<Response>;
-}
-
-export async function fetchUser(id: string, http: HttpClient): Promise<User> {
-  const res = await http.get(`/users/${id}`);
-  if (!res.ok) throw new Error(`Failed to fetch user ${id}`, { cause: res.status });
-  return res.json() as Promise<User>;
-}
-```
-
-```ts
-// tests/api_client.test.ts
-import assert from 'node:assert/strict';
-import { describe, it } from 'node:test';
-import type { HttpClient } from '../src/api_client.ts';
-import { fetchUser } from '../src/api_client.ts';
-
-describe('fetchUser', () => {
-  it('returns parsed user on success', async () => {
-    const mockHttp: HttpClient = {
-      get: async () => new Response(JSON.stringify({ id: '1', name: 'Alice' })),
-    };
-    const user = await fetchUser('1', mockHttp);
-    assert.deepEqual(user, { id: '1', name: 'Alice' });
-  });
-
-  it('throws on non-ok response', async () => {
-    const mockHttp: HttpClient = {
-      get: async () => new Response(null, { status: 404 }),
-    };
-    await assert.rejects(() => fetchUser('1', mockHttp), /Failed to fetch user/);
-  });
-});
-```
-
-#### `node:test` Built-in Mocks
-
-When dependency injection is not practical, use the mocking utilities built into `node:test`:
-
-```ts
-import assert from 'node:assert/strict';
-import { afterEach, describe, it, mock } from 'node:test';
-import * as fs from 'node:fs/promises';
-
-describe('readConfig', () => {
-  afterEach(() => mock.restoreAll());
-
-  it('reads and parses a config file', async () => {
-    mock.method(fs, 'readFile', async () => '{"port":3000}');
-    const config = await readConfig('config.json');
-    assert.equal(config.port, 3000);
-  });
-});
-```
-
-Use `mock.fn` to create standalone spy functions:
-
-```ts
-const fn = mock.fn((x: number) => x * 2);
-assert.equal(fn(3), 6);
-assert.equal(fn.mock.calls.length, 1);
-```
-
-#### Mocking Rules
-
+- **Prefer dependency injection** — design functions to accept dependencies as parameters (e.g., the `Client` constructor accepts a custom `fetch`). This is the most testable pattern.
+- **Fallback to `node:test` mocks** — use `mock.method()` or `mock.fn()` when DI is not practical
 - **Always restore mocks** — use `afterEach(() => mock.restoreAll())` to prevent state leaking between tests
 - **Mock at the boundary** — mock the HTTP client, file system, or external SDK; never mock internal library functions
-- **Test behaviour, not implementation** — assert on outputs and observable effects, not on internal call counts unless that is the explicit contract
+- **Test behaviour, not implementation** — assert on outputs and observable effects, not on internal call counts
 - **Keep mocks minimal** — implement only the methods the code under test actually calls
-
-```ts
-// only implement what's needed; cast for the rest
-const mockClient = {
-  get: async () => new Response('{}'),
-} as unknown as FullApiClient;
-```
 
 ### Testing Public API
 
@@ -563,7 +346,7 @@ The `!` suffix (e.g. `feat!:`) or a `BREAKING CHANGE:` footer marks a breaking c
 
 - Keep PRs small and focused — one feature or fix per PR
 - All checks must pass before merging: `npm run check`
-- Fill in the pull request template (`.github/pull_request_template.md`): select the type of change, confirm all checklist items, and ensure `CHANGELOG.md` is updated under `[Unreleased]`
+- Fill in the pull request template (`.github/pull_request_template.md`): select the type of change and confirm all checklist items
 - After creating the PR, stop. Do not merge it. Inform the user and wait for them to review and merge.
 
 ### Tags and Releases
@@ -732,3 +515,13 @@ Quick-reference checklist. Full rules for each step are in the sections above.
 - [ ] `npm version patch` (or `minor` / `major` — must match the version git-cliff determined)
 - [ ] `npm pack --dry-run` — verify published contents (→ [Verifying Package Contents](#verifying-package-contents))
 - [ ] `git push --follow-tags` — the `publish` workflow triggers automatically; do not run `npm publish` manually
+
+---
+
+## Gotchas
+
+- **BCCH API rate limit** — maximum 5 simultaneous requests per second per account. Do not add parallel fetching or bulk request features without explicit throttling.
+- **`fillForward` throws on leading gaps** — if the first observation has no valid value, `fillForward` throws. Ensure the start date falls on a trading day when writing tests or examples.
+- **`cliff.toml` is formatted by `oxfmt`** — this is non-obvious since it's a TOML file, but `oxfmt` includes it in its formatting scope. If you edit `cliff.toml`, run `npm run format`.
+- **`src/` uses `.js` extensions, `tests/` uses `.ts` extensions** — see [ESM and Module Extensions](#esm-and-module-extensions). Getting this wrong causes runtime errors that the type-checker won't catch.
+- **Zero production dependencies** — this library has no `dependencies`, only `devDependencies`. Adding a production dependency is a significant decision that affects all consumers.
